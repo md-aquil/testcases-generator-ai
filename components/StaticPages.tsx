@@ -1,24 +1,24 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Page } from '../types';
-import {
-  Shield,
-  Lock,
-  Eye,
-  FileText,
-  Server,
-  Globe,
-  Users,
-  Award,
-  Heart,
-  ArrowRight,
-  CheckCircle2,
-  AlertTriangle,
-  Cloud,
-  Mail,
-  MapPin,
-  Phone,
-  MessageSquare,
+import { 
+  Shield, 
+  Lock, 
+  Eye, 
+  FileText, 
+  Server, 
+  Globe, 
+  Users, 
+  Award, 
+  Heart, 
+  ArrowRight, 
+  CheckCircle2, 
+  AlertTriangle, 
+  Cloud, 
+  Mail, 
+  MapPin, 
+  Phone, 
+  MessageSquare, 
   Briefcase,
   Terminal,
   Cpu,
@@ -27,13 +27,142 @@ import {
   Box,
   Zap,
   Layers,
-  Code2
+  Code2,
+  BookOpen,
+  Calendar,
+  ChevronRight,
+  Search,
+  Key,
+  Webhook,
+  Database,
+  Copy,
+  Check,
+  Menu,
+  X,
+  Bot
 } from 'lucide-react';
 
 interface StaticPageProps {
   type: Page;
   onNavigate?: (page: Page) => void;
 }
+
+// --- Helper Components ---
+
+const SectionHeader = ({ title, subtitle, label }: { title: string, subtitle: string, label?: string }) => (
+  <div className="text-center space-y-6 max-w-3xl mx-auto mb-16">
+    {label && (
+      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 text-xs font-bold uppercase tracking-widest mb-2 border border-violet-100 dark:border-violet-500/20">
+        {label}
+      </div>
+    )}
+    <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight">
+      {title}
+    </h1>
+    <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+      {subtitle}
+    </p>
+  </div>
+);
+
+const CodeBlock = ({ code, language = 'bash' }: { code: string, language?: string }) => {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="relative group rounded-xl overflow-hidden bg-[#1e1e24] border border-white/5 shadow-2xl">
+      <div className="flex items-center justify-between px-4 py-2 bg-[#2a2a30] border-b border-white/5">
+        <span className="text-xs font-mono text-gray-400">{language}</span>
+        <button onClick={handleCopy} className="text-gray-400 hover:text-white transition-colors">
+          {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+        </button>
+      </div>
+      <div className="p-4 overflow-x-auto">
+        <pre className="text-sm font-mono text-gray-300 leading-relaxed">
+          {code}
+        </pre>
+      </div>
+    </div>
+  );
+};
+
+const Endpoint = ({ method, path, description }: { method: string, path: string, description: string }) => (
+  <div className="border border-gray-200 dark:border-white/10 rounded-xl p-6 bg-gray-50 dark:bg-[#131316]">
+    <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
+      <span className={`px-3 py-1 rounded-lg text-xs font-bold font-mono uppercase ${
+        method === 'GET' ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400' :
+        method === 'POST' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' :
+        method === 'DELETE' ? 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400' :
+        'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400'
+      }`}>
+        {method}
+      </span>
+      <code className="text-sm font-mono text-gray-900 dark:text-white bg-white dark:bg-black/30 px-2 py-1 rounded border border-gray-200 dark:border-white/10">
+        {path}
+      </code>
+    </div>
+    <p className="text-gray-600 dark:text-gray-400 text-sm">
+      {description}
+    </p>
+  </div>
+);
+
+const LegalLayout = ({ title, lastUpdated, children, onNavigate }: any) => (
+  <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col lg:flex-row gap-12 animate-fade-in-up">
+    {/* Sidebar Navigation for Legal Docs */}
+    <div className="lg:w-64 flex-shrink-0">
+       <div className="sticky top-24 space-y-8">
+          <div>
+            <h3 className="font-bold text-gray-900 dark:text-white mb-4 px-2">Legal Center</h3>
+            <nav className="space-y-1">
+               {[
+                 { id: 'PRIVACY', label: 'Privacy Policy' },
+                 { id: 'TERMS', label: 'Terms of Service' },
+                 { id: 'SECURITY', label: 'Security Policy' },
+                 { id: 'COOKIES', label: 'Cookie Policy' }
+               ].map(item => (
+                 <button
+                   key={item.id}
+                   onClick={() => onNavigate(item.id)}
+                   className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                     title === item.label 
+                      ? 'bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300' 
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white'
+                   }`}
+                 >
+                   {item.label}
+                 </button>
+               ))}
+            </nav>
+          </div>
+          <div className="bg-indigo-50 dark:bg-indigo-500/10 p-4 rounded-xl border border-indigo-100 dark:border-indigo-500/20">
+             <p className="text-xs text-indigo-800 dark:text-indigo-200 mb-2 font-semibold">Questions?</p>
+             <p className="text-xs text-indigo-600 dark:text-indigo-300 mb-3">
+               Contact our legal team for clarifications.
+             </p>
+             <a href="mailto:legal@qagenai.com" className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">legal@qagenai.com</a>
+          </div>
+       </div>
+    </div>
+
+    {/* Main Content */}
+    <div className="flex-1 max-w-3xl">
+       <div className="mb-10 border-b border-gray-200 dark:border-white/10 pb-8">
+          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">{title}</h1>
+          <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">Last updated: {lastUpdated}</p>
+       </div>
+       <div className="prose prose-lg prose-indigo dark:prose-invert max-w-none">
+          {children}
+       </div>
+    </div>
+  </div>
+);
+
+// --- Main Component ---
 
 export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
   const handleCtaClick = () => {
@@ -44,782 +173,696 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
 
   const renderContent = () => {
     switch (type) {
+      // ---------------- ABOUT PAGE ----------------
       case 'ABOUT':
         return (
-          <div className="max-w-5xl mx-auto px-6 py-12 space-y-16 animate-fade-in-up">
-            {/* Hero Section */}
-            <div className="text-center space-y-6 max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-widest mb-2 border border-indigo-100 dark:border-indigo-500/20">
-                Our Mission
-              </div>
-              <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight">
-                The End of <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">Boilerplate Testing</span>
-              </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
-                We transform User Stories into rigorous Manual Test Cases, Gherkin Scenarios, and production-ready Automation Scripts.
-                Stop translating requirements manually. Start shipping quality software.
-              </p>
-            </div>
+          <div className="max-w-7xl mx-auto px-6 py-12 space-y-24 animate-fade-in-up">
+            <SectionHeader 
+              label="Our Mission"
+              title="The End of Boilerplate"
+              subtitle="We transform User Stories into rigorous Manual Test Cases, Gherkin Scenarios, and production-ready Automation Scripts. Stop translating requirements manually. Start shipping quality software."
+            />
 
-            {/* Origin Story */}
-            <div className="grid md:grid-cols-2 gap-8 items-center bg-gray-50 dark:bg-white/5 p-8 rounded-3xl border border-gray-100 dark:border-white/5">
-              <div className="space-y-6">
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Why We Built This</h2>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
-                  For years, QA engineers have been stuck in a loop: Read a Jira ticket, write the same test steps in a spreadsheet, translate them into Gherkin, and then write the boilerplate code for automation. It's tedious, error-prone, and slow.
-                </p>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
-                  We built QA GenAI Suite to break this cycle. We believe QA talent should be focused on <strong>exploratory testing, strategy, and complex edge cases</strong>—not on writing documentation that an AI can generate in seconds.
-                </p>
-              </div>
-              <div className="relative h-full min-h-[300px] bg-white dark:bg-[#0a0a0c] rounded-2xl border border-gray-200 dark:border-white/10 p-6 shadow-xl transform md:rotate-2 hover:rotate-0 transition-transform duration-500">
-                {/* Abstract UI representation */}
-                <div className="flex items-center gap-2 mb-4 border-b border-gray-100 dark:border-white/5 pb-4">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <div className="ml-auto w-20 h-2 rounded-full bg-gray-100 dark:bg-white/10"></div>
-                </div>
-                <div className="space-y-3">
-                  <div className="w-3/4 h-4 rounded bg-indigo-100 dark:bg-indigo-500/20"></div>
-                  <div className="w-full h-2 rounded bg-gray-100 dark:bg-white/5"></div>
-                  <div className="w-5/6 h-2 rounded bg-gray-100 dark:bg-white/5"></div>
-                  <div className="w-4/6 h-2 rounded bg-gray-100 dark:bg-white/5"></div>
-                  <div className="mt-8 p-4 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-100 dark:border-white/5">
-                    <div className="w-1/2 h-3 rounded bg-emerald-100 dark:bg-emerald-500/20 mb-2"></div>
-                    <div className="w-full h-2 rounded bg-gray-200 dark:bg-white/10"></div>
+            {/* Origin Story Grid */}
+            <div className="grid md:grid-cols-2 gap-12 items-center bg-gray-50 dark:bg-[#0f0e1a] p-10 rounded-[2.5rem] border border-gray-100 dark:border-white/5">
+               <div className="space-y-8">
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Why We Built This</h2>
+                  <div className="space-y-6 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                    <p>
+                       For years, QA engineers have been stuck in a loop: Read a Jira ticket, write the same test steps in a spreadsheet, translate them into Gherkin, and then write the boilerplate code for automation. It's tedious, error-prone, and slow.
+                    </p>
+                    <p>
+                       We built QA GenAI Suite to break this cycle. We believe QA talent should be focused on <strong>exploratory testing, strategy, and complex edge cases</strong>—not on writing documentation that an AI can generate in seconds.
+                    </p>
+                    <p>
+                       Our models are fine-tuned specifically on millions of high-quality test plans and automation repositories, ensuring that the output isn't just generic text—it's executable, reliable engineering work.
+                    </p>
                   </div>
-                </div>
-                {/* Badge */}
-                <div className="absolute -bottom-4 -right-4 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-bold transform -rotate-3">
-                  Built by QA Engineers
-                </div>
-              </div>
+               </div>
+               <div className="relative h-full min-h-[400px] bg-white dark:bg-[#08080a] rounded-2xl border border-gray-200 dark:border-white/10 p-8 shadow-2xl transform md:rotate-2 hover:rotate-0 transition-transform duration-500 flex flex-col justify-center">
+                   {/* Abstract Representation of the AI Engine */}
+                   <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-fuchsia-500/5 rounded-2xl"></div>
+                   <div className="relative space-y-4">
+                      <div className="flex items-center gap-3 mb-6">
+                         <div className="w-12 h-12 rounded-xl bg-violet-600 flex items-center justify-center">
+                            <Bot className="w-6 h-6 text-white" />
+                         </div>
+                         <div>
+                            <div className="h-2 w-24 bg-gray-200 dark:bg-white/10 rounded mb-2"></div>
+                            <div className="h-2 w-16 bg-gray-200 dark:bg-white/10 rounded"></div>
+                         </div>
+                      </div>
+                      <div className="space-y-2">
+                         <div className="h-2 w-full bg-gray-100 dark:bg-white/5 rounded"></div>
+                         <div className="h-2 w-5/6 bg-gray-100 dark:bg-white/5 rounded"></div>
+                         <div className="h-2 w-4/6 bg-gray-100 dark:bg-white/5 rounded"></div>
+                      </div>
+                      <div className="p-4 bg-emerald-50 dark:bg-emerald-500/10 rounded-lg border border-emerald-100 dark:border-emerald-500/20 mt-6">
+                         <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-mono text-xs font-bold mb-2">
+                            <CheckCircle2 className="w-4 h-4" /> TEST PASSED
+                         </div>
+                         <div className="h-1.5 w-full bg-emerald-200 dark:bg-emerald-500/20 rounded-full overflow-hidden">
+                            <div className="h-full w-full bg-emerald-500"></div>
+                         </div>
+                      </div>
+                   </div>
+                   {/* Badge */}
+                   <div className="absolute -bottom-6 -right-6 bg-violet-600 text-white px-6 py-3 rounded-xl shadow-xl text-sm font-bold transform -rotate-3 border-4 border-white dark:border-[#030014]">
+                      Built by Engineers, for Engineers
+                   </div>
+               </div>
             </div>
 
             {/* Philosophy Cards */}
-            <div className="space-y-8">
-              <div className="text-center">
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Our Philosophy</h2>
-                <p className="text-gray-500 dark:text-gray-400 mt-2 text-lg">More than just a generator. A complete quality methodology.</p>
-              </div>
-              <div className="grid md:grid-cols-3 gap-6">
-                {/* Card 1 */}
-                <div className="p-8 bg-white dark:bg-[#131316] rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm hover:border-indigo-500/30 transition-colors group">
-                  <div className="w-14 h-14 bg-indigo-100 dark:bg-indigo-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <Users className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Collaborative Intelligence</h3>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    QA is a team sport. We provide shared workspaces, role-based access control, and immutable history logs so your entire team stays in sync.
-                  </p>
-                </div>
-                {/* Card 2 */}
-                <div className="p-8 bg-white dark:bg-[#131316] rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm hover:border-purple-500/30 transition-colors group">
-                  <div className="w-14 h-14 bg-purple-100 dark:bg-purple-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <Award className="w-7 h-7 text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Precision Engineering</h3>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    We don't hallucinate quality. Our models are tuned to identify edge cases, negative scenarios, and security boundaries that humans often miss.
-                  </p>
-                </div>
-                {/* Card 3 */}
-                <div className="p-8 bg-white dark:bg-[#131316] rounded-2xl border border-gray-200 dark:border-white/5 shadow-sm hover:border-emerald-500/30 transition-colors group">
-                  <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <Globe className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Proven Scale</h3>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    Trusted by modern engineering teams. Over 100,000+ test steps and 50,000+ lines of automation code generated to date.
-                  </p>
-                </div>
-              </div>
+            <div className="space-y-12">
+               <div className="text-center max-w-2xl mx-auto">
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Our Core Philosophy</h2>
+                  <p className="text-gray-500 dark:text-gray-400 mt-4 text-lg">More than just a generator. A complete quality methodology.</p>
+               </div>
+               <div className="grid md:grid-cols-3 gap-8">
+                  {[
+                    { icon: Users, color: 'violet', title: 'Collaborative Intelligence', desc: 'QA is a team sport. We provide shared workspaces, role-based access control, and immutable history logs so your entire team stays in sync.' },
+                    { icon: Award, color: 'fuchsia', title: 'Precision Engineering', desc: "We don't hallucinate quality. Our models are tuned to identify edge cases, negative scenarios, and security boundaries that humans often miss." },
+                    { icon: Globe, color: 'emerald', title: 'Proven Scale', desc: 'Trusted by modern engineering teams. Over 100,000+ test steps and 50,000+ lines of automation code generated to date.' }
+                  ].map((card, i) => (
+                    <div key={i} className="p-8 bg-white dark:bg-[#0f0e1a] rounded-3xl border border-gray-200 dark:border-white/5 shadow-sm hover:border-violet-500/30 transition-all group hover:-translate-y-1">
+                       <div className={`w-14 h-14 bg-${card.color}-100 dark:bg-${card.color}-500/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                          <card.icon className={`w-7 h-7 text-${card.color}-600 dark:text-${card.color}-400`} />
+                       </div>
+                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{card.title}</h3>
+                       <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                          {card.desc}
+                       </p>
+                    </div>
+                  ))}
+               </div>
             </div>
 
             {/* Trust & Ethics */}
-            <div className="bg-gradient-to-br from-indigo-900 to-slate-900 dark:from-indigo-950/40 dark:to-slate-950/40 rounded-3xl p-8 md:p-12 text-center space-y-6 relative overflow-hidden border border-indigo-500/20">
-              <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
-              <div className="relative z-10">
-                <Shield className="w-16 h-16 text-indigo-300 mx-auto mb-6" />
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Your Data is Yours. Period.</h2>
-                <p className="text-indigo-200 max-w-2xl mx-auto leading-relaxed text-lg">
-                  We are built by QA engineers who understand the importance of IP. We do not use your proprietary user stories or test data to train our public models. All processing is ephemeral and enterprise-grade encrypted.
-                </p>
-              </div>
+            <div className="bg-gradient-to-br from-violet-900 to-slate-900 dark:from-violet-950/40 dark:to-slate-950/40 rounded-[2.5rem] p-8 md:p-16 text-center space-y-8 relative overflow-hidden border border-violet-500/20">
+               <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
+               <div className="relative z-10">
+                  <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-8 backdrop-blur-sm border border-white/10">
+                     <Shield className="w-10 h-10 text-violet-300" />
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Your Data is Yours. Period.</h2>
+                  <p className="text-violet-200 max-w-3xl mx-auto leading-relaxed text-xl">
+                     We are built by QA engineers who understand the importance of IP. We do not use your proprietary user stories or test data to train our public models. All processing is ephemeral and enterprise-grade encrypted.
+                  </p>
+               </div>
             </div>
-
+            
             {/* CTA */}
-            <div className="text-center pt-4 pb-8">
-              <p className="text-gray-500 dark:text-gray-400 mb-6 font-medium">Ready to upgrade your QA workflow?</p>
-              <button
-                onClick={handleCtaClick}
-                className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-lg rounded-full transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transform hover:-translate-y-1"
-              >
-                Start Generating Free
-                <ArrowRight className="w-5 h-5" />
-              </button>
+            <div className="text-center pt-8 pb-12">
+               <p className="text-gray-500 dark:text-gray-400 mb-8 font-medium text-lg">Ready to upgrade your QA workflow?</p>
+               <button 
+                  onClick={handleCtaClick}
+                  className="inline-flex items-center gap-3 px-10 py-5 bg-violet-600 hover:bg-violet-500 text-white font-bold text-lg rounded-full transition-all shadow-[0_0_30px_rgba(139,92,246,0.4)] hover:shadow-[0_0_40px_rgba(139,92,246,0.6)] transform hover:-translate-y-1"
+               >
+                  Start Generating Free
+                  <ArrowRight className="w-6 h-6" />
+               </button>
             </div>
           </div>
         );
 
+      // ---------------- CAREERS PAGE ----------------
       case 'CAREERS':
         return (
-          <div className="max-w-4xl mx-auto px-6 py-12 animate-fade-in-up">
-            <div className="text-center mb-10 space-y-6">
-              <div className="inline-flex items-center justify-center p-4 bg-indigo-50 dark:bg-indigo-500/10 rounded-full mb-4 text-indigo-600 dark:text-indigo-400">
-                <Briefcase className="w-8 h-8" />
-              </div>
-              <h1 className="text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                Build the future of QA
-              </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-                We are a team of engineers, designers, and testers obsessed with quality. We're building the tools we wish we had.
-              </p>
+          <div className="max-w-7xl mx-auto px-6 py-12 animate-fade-in-up">
+            <SectionHeader 
+              label="Join the Team"
+              title="Build the future of QA"
+              subtitle="We are a team of engineers, designers, and testers obsessed with quality. We're building the tools we wish we had."
+            />
+
+            {/* Culture Grid */}
+            <div className="grid md:grid-cols-2 gap-8 mb-20">
+               <div className="p-10 bg-white dark:bg-[#0f0e1a] rounded-[2rem] border border-gray-200 dark:border-white/5 h-full">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Our Culture</h3>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-8 text-lg">
+                    We believe in "Engineering First". Everyone at QA GenAI Suite codes, tests, and deploys. We value autonomy, deep work, and shipping fast without breaking things.
+                  </p>
+                  <ul className="space-y-4">
+                     {['Remote-first DNA (Work from anywhere)', 'Zero bureaucracy / Flat hierarchy', 'Open source contributors', 'Competitive Equity & Salary'].map((item, i) => (
+                        <li key={i} className="flex items-center gap-3 text-gray-700 dark:text-gray-300 font-medium">
+                           <div className="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center">
+                              <CheckCircle2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                           </div>
+                           {item}
+                        </li>
+                     ))}
+                  </ul>
+               </div>
+               <div className="p-10 bg-indigo-900 dark:bg-[#13131f] rounded-[2rem] border border-indigo-800 dark:border-white/5 relative overflow-hidden flex flex-col justify-between text-white">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500 rounded-full filter blur-[100px] opacity-20"></div>
+                  <div className="relative z-10">
+                    <h3 className="text-2xl font-bold mb-6">Perks & Benefits</h3>
+                    <div className="grid grid-cols-2 gap-6">
+                        {[
+                          { icon: Heart, label: 'Full Health & Dental' },
+                          { icon: Globe, label: 'Remote Stipend' },
+                          { icon: BookOpen, label: 'Learning Budget' },
+                          { icon: Calendar, label: 'Unlimited PTO' }
+                        ].map((perk, i) => (
+                          <div key={i} className="flex flex-col gap-2">
+                             <perk.icon className="w-6 h-6 text-indigo-300" />
+                             <span className="text-indigo-100 font-medium">{perk.label}</span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                  <div className="mt-8 pt-8 border-t border-white/10 relative z-10">
+                     <p className="text-indigo-200 mb-2 font-medium">Want to be the first to know?</p>
+                     <a href="#" className="inline-flex items-center gap-2 text-white font-bold hover:underline">
+                        Follow us on LinkedIn <ArrowRight className="w-4 h-4" />
+                     </a>
+                  </div>
+               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6 mb-10">
-              <div className="p-8 bg-white dark:bg-[#131316] rounded-3xl border border-gray-200 dark:border-white/5">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Our Culture</h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
-                  We believe in "Engineering First". Everyone at QA GenAI Suite codes, tests, and deploys. We value autonomy, deep work, and shipping fast without breaking things.
-                </p>
-                <ul className="space-y-3">
-                  {['Remote-first DNA', 'Zero bureaucracy', 'Open source contributors'].map((item, i) => (
-                    <li key={i} className="flex items-center gap-2 text-gray-700 dark:text-gray-300 font-medium">
-                      <CheckCircle2 className="w-5 h-5 text-indigo-500" /> {item}
-                    </li>
+            {/* Job Openings */}
+            <div className="max-w-4xl mx-auto">
+               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Open Positions</h2>
+               <div className="space-y-4">
+                  {[
+                    { role: 'Senior Frontend Engineer', type: 'Engineering', loc: 'Remote (US/EU)', tag: 'React / TS' },
+                    { role: 'Machine Learning Engineer', type: 'AI Research', loc: 'San Francisco / Remote', tag: 'Python / PyTorch' },
+                    { role: 'Founding Product Designer', type: 'Design', loc: 'Remote', tag: 'Figma' },
+                    { role: 'Developer Advocate', type: 'Marketing', loc: 'Remote', tag: 'Content' }
+                  ].map((job, i) => (
+                    <div key={i} className="group flex items-center justify-between p-6 bg-white dark:bg-[#0f0e1a] border border-gray-200 dark:border-white/5 rounded-2xl hover:border-violet-500/30 hover:shadow-lg transition-all cursor-pointer">
+                       <div className="flex items-center gap-6">
+                          <div className="hidden sm:flex w-12 h-12 rounded-xl bg-gray-50 dark:bg-white/5 items-center justify-center font-bold text-gray-400 group-hover:text-violet-500 transition-colors">
+                             {job.role.charAt(0)}
+                          </div>
+                          <div>
+                             <h4 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-violet-500 transition-colors">{job.role}</h4>
+                             <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                <span>{job.type}</span>
+                                <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                                <span>{job.loc}</span>
+                             </div>
+                          </div>
+                       </div>
+                       <div className="flex items-center gap-4">
+                          <span className="hidden sm:inline-block px-3 py-1 rounded-full bg-gray-100 dark:bg-white/10 text-xs font-medium text-gray-600 dark:text-gray-300">
+                             {job.tag}
+                          </span>
+                          <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-violet-500 transition-colors" />
+                       </div>
+                    </div>
                   ))}
-                </ul>
-              </div>
-              <div className="p-8 bg-white dark:bg-[#131316] rounded-3xl border border-gray-200 dark:border-white/5 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Current Status</h3>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    We are currently a small, tight-knit team in heads-down build mode. We are not actively hiring for new roles at this exact moment, but things change fast in startup land.
-                  </p>
-                </div>
-                <div className="mt-8 pt-8 border-t border-gray-100 dark:border-white/5">
-                  <p className="text-sm text-gray-500 mb-2">Want to be the first to know?</p>
-                  <a href="#" className="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold hover:underline">
-                    Follow us on LinkedIn <ArrowRight className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
+               </div>
+               <div className="mt-8 text-center">
+                  <p className="text-gray-500 dark:text-gray-400">Don't see your role? <a href="#" className="text-violet-600 dark:text-violet-400 font-bold hover:underline">Email us your resume</a>.</p>
+               </div>
             </div>
           </div>
         );
 
+      // ---------------- CONTACT PAGE ----------------
       case 'CONTACT':
         return (
-          <div className="max-w-6xl mx-auto px-6 py-12 animate-fade-in-up">
-            <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
-              {/* Contact Info */}
-              <div className="space-y-8">
-                <div className="space-y-4">
-                  <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">Get in touch</h1>
-                  <p className="text-lg text-gray-600 dark:text-gray-300">
-                    Have questions about our pricing, enterprise plans, or just want to say hello? We'd love to hear from you.
-                  </p>
+          <div className="max-w-7xl mx-auto px-6 py-12 animate-fade-in-up">
+             <SectionHeader 
+               title="Get in touch"
+               subtitle="Have questions about our pricing, enterprise plans, or just want to say hello? We'd love to hear from you."
+             />
+
+             <div className="grid md:grid-cols-2 gap-12 lg:gap-24 items-start">
+                {/* Contact Info Side */}
+                <div className="space-y-12">
+                   <div className="grid gap-6">
+                      <div className="flex items-start gap-5 p-6 rounded-2xl bg-white dark:bg-[#0f0e1a] border border-gray-200 dark:border-white/5 hover:border-violet-500/30 transition-colors">
+                         <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
+                            <Mail className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                         </div>
+                         <div>
+                            <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">Email</h3>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">Our friendly team is here to help.</p>
+                            <a href="mailto:support@qagenai.com" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">support@qagenai.com</a>
+                         </div>
+                      </div>
+                      
+                      <div className="flex items-start gap-5 p-6 rounded-2xl bg-white dark:bg-[#0f0e1a] border border-gray-200 dark:border-white/5 hover:border-violet-500/30 transition-colors">
+                         <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
+                            <MapPin className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                         </div>
+                         <div>
+                            <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">Office</h3>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">Come say hello at our HQ.</p>
+                            <p className="text-gray-900 dark:text-gray-200 text-sm font-medium">100 Spear Street, Suite 500<br/>San Francisco, CA 94105</p>
+                         </div>
+                      </div>
+
+                      <div className="flex items-start gap-5 p-6 rounded-2xl bg-white dark:bg-[#0f0e1a] border border-gray-200 dark:border-white/5 hover:border-violet-500/30 transition-colors">
+                         <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
+                            <Phone className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                         </div>
+                         <div>
+                            <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">Phone</h3>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">Mon-Fri from 8am to 5pm.</p>
+                            <a href="tel:+15550000000" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">+1 (555) 000-0000</a>
+                         </div>
+                      </div>
+                   </div>
+
+                   {/* FAQ Section */}
+                   <div className="space-y-6">
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Frequently Asked Questions</h3>
+                      <div className="space-y-4">
+                         {[
+                           { q: "Can I use QA GenAI for free?", a: "Yes! Our Starter plan includes 5 free generations per day." },
+                           { q: "Is my data secure?", a: "Absolutely. We use enterprise-grade encryption and do not train on your data." },
+                           { q: "Do you offer custom enterprise contracts?", a: "Yes, for teams larger than 20, we offer custom billing and SLAs." }
+                         ].map((faq, i) => (
+                           <div key={i} className="border-b border-gray-200 dark:border-white/5 pb-4">
+                              <h4 className="font-semibold text-gray-900 dark:text-white mb-2">{faq.q}</h4>
+                              <p className="text-gray-600 dark:text-gray-400 text-sm">{faq.a}</p>
+                           </div>
+                         ))}
+                      </div>
+                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                    <Mail className="w-6 h-6 text-indigo-600 dark:text-indigo-400 mt-1" />
-                    <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white">Email</h3>
-                      <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Our friendly team is here to help.</p>
-                      <a href="mailto:support@qagenai.com" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">support@qagenai.com</a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                    <MapPin className="w-6 h-6 text-indigo-600 dark:text-indigo-400 mt-1" />
-                    <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white">Office</h3>
-                      <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Come say hello at our office headquarters.</p>
-                      <p className="text-gray-900 dark:text-gray-200 text-sm">100 Spear Street, Suite 500<br />San Francisco, CA 94105</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                    <Phone className="w-6 h-6 text-indigo-600 dark:text-indigo-400 mt-1" />
-                    <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white">Phone</h3>
-                      <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">Mon-Fri from 8am to 5pm.</p>
-                      <a href="tel:+15550000000" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">+1 (555) 000-0000</a>
-                    </div>
-                  </div>
+                {/* Contact Form */}
+                <div className="bg-white dark:bg-[#0f0e1a] p-8 md:p-10 rounded-[2rem] border border-gray-200 dark:border-white/10 shadow-2xl relative overflow-hidden">
+                   <div className="absolute top-0 right-0 w-64 h-64 bg-violet-500 rounded-full filter blur-[120px] opacity-10 pointer-events-none"></div>
+                   
+                   <form className="space-y-6 relative z-10" onSubmit={(e) => { e.preventDefault(); alert('Message sent!'); }}>
+                      <div className="grid grid-cols-2 gap-6">
+                         <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">First name</label>
+                            <input type="text" className="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 dark:text-white transition-all" placeholder="Jane" />
+                         </div>
+                         <div>
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Last name</label>
+                            <input type="text" className="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 dark:text-white transition-all" placeholder="Doe" />
+                         </div>
+                      </div>
+                      <div>
+                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                         <input type="email" className="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 dark:text-white transition-all" placeholder="you@company.com" />
+                      </div>
+                      <div>
+                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Subject</label>
+                         <select className="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 dark:text-white transition-all appearance-none cursor-pointer">
+                            <option>General Inquiry</option>
+                            <option>Sales / Enterprise</option>
+                            <option>Support</option>
+                            <option>Partnership</option>
+                         </select>
+                      </div>
+                      <div>
+                         <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Message</label>
+                         <textarea rows={5} className="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 dark:text-white resize-none transition-all" placeholder="How can we help you?"></textarea>
+                      </div>
+                      <button type="submit" className="w-full py-4 bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-violet-500/20 hover:shadow-violet-500/40 hover:-translate-y-0.5">
+                         Send Message
+                      </button>
+                   </form>
                 </div>
-              </div>
-
-              {/* Contact Form */}
-              <div className="bg-white dark:bg-[#131316] p-8 rounded-3xl border border-gray-200 dark:border-white/10 shadow-xl">
-                <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert('Message sent!'); }}>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">First name</label>
-                      <input type="text" className="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 dark:text-white" placeholder="Jane" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Last name</label>
-                      <input type="text" className="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 dark:text-white" placeholder="Doe" />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email</label>
-                    <input type="email" className="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 dark:text-white" placeholder="you@company.com" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Message</label>
-                    <textarea rows={4} className="w-full px-4 py-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 dark:text-white resize-none" placeholder="How can we help you?"></textarea>
-                  </div>
-                  <button type="submit" className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-500/20">
-                    Send Message
-                  </button>
-                </form>
-              </div>
-            </div>
+             </div>
           </div>
         );
 
+      // ---------------- BLOG PAGE ----------------
       case 'BLOG':
+        const blogPosts = [
+            { id: 1, title: 'The Future of AI in QA Testing', date: 'Oct 12, 2023', category: 'Thought Leadership', readTime: '5 min read', summary: 'How generative models are changing the way we think about test coverage and edge cases.' },
+            { id: 2, title: 'Playwright vs Cypress in 2024', date: 'Nov 05, 2023', category: 'Technical', readTime: '8 min read', summary: 'A deep dive into the performance benchmarks and developer experience of the two leading tools.' },
+            { id: 3, title: 'Implementing BDD at Scale', date: 'Dec 01, 2023', category: 'Strategy', readTime: '6 min read', summary: 'Lessons learned from migrating a 50-person QA team to Gherkin syntax.' },
+            { id: 4, title: 'Release Notes: v2.5', date: 'Jan 15, 2024', category: 'Product', readTime: '3 min read', summary: 'Introducing multi-modal generation, visual regression support, and team workspaces.' },
+            { id: 5, title: 'Why Manual Testing Won\'t Die', date: 'Feb 02, 2024', category: 'Opinion', readTime: '4 min read', summary: 'AI accelerates testing, but the human intuition for exploratory testing remains irreplaceable.' },
+            { id: 6, title: 'Securing Your Test Data', date: 'Feb 20, 2024', category: 'Security', readTime: '7 min read', summary: 'Best practices for handling PII in automated test environments.' },
+        ];
         return (
-          <div className="max-w-6xl mx-auto px-6 py-12 space-y-10 animate-fade-in-up">
-            <div className="text-center space-y-4">
-              <h1 className="text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">The QA GenAI Blog</h1>
-              <p className="text-xl text-gray-500 dark:text-gray-400">Engineering the future of software testing.</p>
-            </div>
+            <div className="max-w-7xl mx-auto px-6 py-12 animate-fade-in-up">
+                <SectionHeader 
+                  label="Engineering Blog"
+                  title="Insights & Updates"
+                  subtitle="Tutorials, product announcements, and deep dives from the team building the next generation of testing tools."
+                />
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[
-                {
-                  category: 'Strategy',
-                  title: "The Death of the Manual Spreadsheet",
-                  date: "Oct 24, 2023",
-                  readTime: "5 min read",
-                  desc: "Why modern engineering teams are moving away from Excel-based test plans and embracing dynamic, AI-generated assets.",
-                  author: "Sarah Jenkins, Head of Product"
-                },
-                {
-                  category: 'Technical',
-                  title: "Playwright vs Cypress: An AI-Driven Comparison",
-                  date: "Nov 02, 2023",
-                  readTime: "8 min read",
-                  desc: "We ran 10,000 generated scripts through both frameworks. Here is what we found regarding flakiness, speed, and DX.",
-                  author: "David Chen, Lead SDET"
-                },
-                {
-                  category: 'Tutorial',
-                  title: "Prompt Engineering for QA Professionals",
-                  date: "Nov 15, 2023",
-                  readTime: "6 min read",
-                  desc: "How to write user stories that result in perfect test coverage. The art of specificity in the age of LLMs.",
-                  author: "Alex Rivera, QA Lead"
-                },
-                {
-                  category: 'Innovation',
-                  title: "Self-Healing Tests: Myth or Reality?",
-                  date: "Dec 01, 2023",
-                  readTime: "7 min read",
-                  desc: "Exploring the capabilities of GenAI to automatically fix broken selectors in CI/CD pipelines.",
-                  author: "Sarah Jenkins, Head of Product"
-                },
-                {
-                  category: 'Case Study',
-                  title: "Scaling Automation at FinTech Corp",
-                  date: "Dec 10, 2023",
-                  readTime: "4 min read",
-                  desc: "How a regulated financial institution reduced regression time by 60% using generated BDD scenarios.",
-                  author: "Guest Contributor"
-                },
-                {
-                  category: 'Technical',
-                  title: "The State of AI in Testing 2024",
-                  date: "Jan 05, 2024",
-                  readTime: "10 min read",
-                  desc: "Our predictions for the coming year. Agentic workflows, vision-based verification, and more.",
-                  author: "David Chen, Lead SDET"
-                }
-              ].map((post, i) => (
-                <div key={i} className="group flex flex-col bg-white dark:bg-[#131316] border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-indigo-500/10 hover:border-indigo-500/30 transition-all cursor-pointer">
-                  <div className="h-48 bg-gray-100 dark:bg-white/5 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  </div>
-                  <div className="p-6 flex flex-col flex-1">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">{post.category}</span>
-                      <span className="text-xs text-gray-400">{post.readTime}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                      {post.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6 flex-1">
-                      {post.desc}
-                    </p>
-                    <div className="pt-4 border-t border-gray-100 dark:border-white/5 flex items-center justify-between text-xs text-gray-500">
-                      <span>{post.author}</span>
-                      <span>{post.date}</span>
-                    </div>
-                  </div>
+                {/* Search & Categories */}
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
+                   <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar w-full md:w-auto">
+                      {['All', 'Technical', 'Product', 'Strategy', 'Opinion'].map(cat => (
+                         <button key={cat} className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${cat === 'All' ? 'bg-violet-600 text-white' : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10'}`}>
+                            {cat}
+                         </button>
+                      ))}
+                   </div>
+                   <div className="relative w-full md:w-64">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input type="text" placeholder="Search articles..." className="w-full pl-10 pr-4 py-2 bg-white dark:bg-[#131316] border border-gray-200 dark:border-white/10 rounded-xl text-sm focus:ring-2 focus:ring-violet-500/20 outline-none" />
+                   </div>
                 </div>
-              ))}
+
+                {/* Featured Post */}
+                <div className="mb-16 group relative rounded-[2rem] overflow-hidden bg-gray-900 dark:bg-black border border-gray-800 dark:border-white/10 aspect-[21/9] md:aspect-[21/8]">
+                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10"></div>
+                   <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&q=80" alt="Code" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" />
+                   <div className="absolute bottom-0 left-0 p-8 md:p-12 z-20 max-w-3xl">
+                      <span className="px-3 py-1 bg-violet-600 text-white text-xs font-bold uppercase tracking-wider rounded-md mb-4 inline-block">Featured</span>
+                      <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">The Future of AI in QA Testing</h2>
+                      <p className="text-lg text-gray-300 mb-6 line-clamp-2">How generative models are changing the way we think about test coverage, edge cases, and the role of the modern QA engineer.</p>
+                      <button className="flex items-center gap-2 text-white font-bold hover:gap-3 transition-all">Read Article <ArrowRight className="w-5 h-5" /></button>
+                   </div>
+                </div>
+
+                {/* Blog Grid */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {blogPosts.map(post => (
+                        <div key={post.id} className="group bg-white dark:bg-[#0f0e1a] rounded-3xl border border-gray-200 dark:border-white/5 overflow-hidden hover:border-violet-500/30 transition-all cursor-pointer hover:-translate-y-1 hover:shadow-xl">
+                            <div className="h-56 bg-gray-100 dark:bg-[#1a1a1d] relative overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                <div className="absolute top-4 left-4">
+                                    <span className="px-3 py-1 bg-white/90 dark:bg-black/60 backdrop-blur-md rounded-full text-xs font-bold text-gray-900 dark:text-white border border-gray-200 dark:border-white/10">
+                                        {post.category}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="p-8 space-y-4 flex flex-col h-[calc(100%-14rem)]">
+                                <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+                                    <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {post.date}</span>
+                                    <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" /> {post.readTime}</span>
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-violet-500 transition-colors line-clamp-2">
+                                    {post.title}
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm line-clamp-3 flex-1">
+                                    {post.summary}
+                                </p>
+                                <div className="pt-4 mt-auto flex items-center text-sm font-bold text-violet-600 dark:text-violet-400 group-hover:translate-x-2 transition-transform">
+                                    Read <ChevronRight className="w-4 h-4 ml-1" />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                
+                {/* Newsletter Signup */}
+                <div className="mt-24 bg-gray-900 dark:bg-white/5 rounded-[2rem] p-12 text-center relative overflow-hidden">
+                   <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5"></div>
+                   <div className="relative z-10 max-w-2xl mx-auto space-y-6">
+                      <h2 className="text-3xl font-bold text-white">Subscribe to our newsletter</h2>
+                      <p className="text-gray-400">Get the latest testing strategies and product updates delivered to your inbox.</p>
+                      <div className="flex flex-col sm:flex-row gap-4">
+                         <input type="email" placeholder="Enter your email" className="flex-1 px-6 py-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500" />
+                         <button className="px-8 py-4 bg-violet-600 hover:bg-violet-500 text-white font-bold rounded-xl transition-colors">Subscribe</button>
+                      </div>
+                      <p className="text-xs text-gray-500">No spam, unsubscribe anytime.</p>
+                   </div>
+                </div>
             </div>
-          </div>
         );
 
+      // ---------------- INTEGRATIONS PAGE ----------------
       case 'INTEGRATIONS':
-        return (
-          <div className="max-w-6xl mx-auto px-6 py-12 animate-fade-in-up">
-            <div className="text-center mb-10 space-y-4">
-              <div className="inline-flex items-center justify-center p-4 bg-indigo-50 dark:bg-indigo-500/10 rounded-full mb-4 text-indigo-600 dark:text-indigo-400">
-                <Layers className="w-8 h-8" />
-              </div>
-              <h1 className="text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                Connect your Workflow
-              </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                Seamlessly integrate AI-generated tests into your existing ecosystem. <br />
-                <span className="text-indigo-500 font-bold">Enterprise Private Beta</span>
-              </p>
-            </div>
+          const tools = [
+              { name: 'Jira', icon: <MessageSquare className="w-8 h-8 text-[#0052CC]" />, desc: 'Bi-directional sync of user stories and test cases.', status: 'Active', category: 'Project Mgmt' },
+              { name: 'GitHub', icon: <GitBranch className="w-8 h-8 text-white" />, desc: 'Automatically commit generated automation scripts to your repo.', status: 'Active', category: 'VCS' },
+              { name: 'Slack', icon: <MessageSquare className="w-8 h-8 text-[#E01E5A]" />, desc: 'Get notified when new test suites are generated.', status: 'Beta', category: 'Communication' },
+              { name: 'Azure DevOps', icon: <Layout className="w-8 h-8 text-[#0078D7]" />, desc: 'Sync work items and test plans.', status: 'Coming Soon', category: 'Project Mgmt' },
+              { name: 'TestRail', icon: <Database className="w-8 h-8 text-[#3D2C8D]" />, desc: 'Export manual test cases directly to TestRail.', status: 'Coming Soon', category: 'Test Mgmt' },
+              { name: 'Jenkins', icon: <Server className="w-8 h-8 text-[#D24939]" />, desc: 'Trigger generation as part of your CI pipeline.', status: 'Coming Soon', category: 'CI/CD' },
+          ];
+          return (
+              <div className="max-w-7xl mx-auto px-6 py-12 animate-fade-in-up">
+                  <SectionHeader 
+                    label="Ecosystem"
+                    title="Integrations"
+                    subtitle="Connect QA GenAI Suite with the tools you already use to create a seamless quality workflow."
+                  />
 
-            <div className="grid md:grid-cols-3 gap-6 mb-10">
-              <div className="p-8 bg-white dark:bg-[#131316] rounded-3xl border border-gray-200 dark:border-white/5 hover:border-indigo-500/30 transition-all">
-                <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center mb-6">
-                  <Layout className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Issue Tracking</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
-                  Automatically create Test Case tickets in Jira or Linear when a new story is processed.
-                </p>
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"><CheckCircle2 className="w-4 h-4 text-green-500" /> Jira Software</div>
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"><CheckCircle2 className="w-4 h-4 text-green-500" /> Linear</div>
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"><CheckCircle2 className="w-4 h-4 text-green-500" /> Azure DevOps</div>
-                </div>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {tools.map((tool, i) => (
+                          <div key={i} className="p-8 bg-white dark:bg-[#0f0e1a] rounded-[2rem] border border-gray-200 dark:border-white/5 hover:border-violet-500/30 transition-colors flex flex-col justify-between h-full group hover:shadow-xl">
+                              <div>
+                                  <div className="flex items-center justify-between mb-8">
+                                      <div className="w-16 h-16 bg-gray-50 dark:bg-white/5 rounded-2xl flex items-center justify-center border border-gray-100 dark:border-white/5 group-hover:scale-110 transition-transform">
+                                          {tool.icon}
+                                      </div>
+                                      <span className={`text-[10px] font-bold px-3 py-1 rounded-full border ${
+                                          tool.status === 'Active' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                          tool.status === 'Beta' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+                                          'bg-gray-500/10 text-gray-500 border-gray-500/20'
+                                      }`}>
+                                          {tool.status.toUpperCase()}
+                                      </span>
+                                  </div>
+                                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{tool.name}</h3>
+                                  <p className="text-sm font-medium text-violet-500 mb-4">{tool.category}</p>
+                                  <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-8">
+                                      {tool.desc}
+                                  </p>
+                              </div>
+                              <button className={`w-full py-3 rounded-xl text-sm font-bold border transition-colors ${
+                                  tool.status === 'Active' || tool.status === 'Beta' 
+                                  ? 'bg-white dark:bg-white/5 text-gray-900 dark:text-white border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10'
+                                  : 'bg-transparent text-gray-400 border-dashed border-gray-200 dark:border-white/10 cursor-not-allowed'
+                              }`}>
+                                  {tool.status === 'Coming Soon' ? 'Join Waitlist' : 'Configure Integration'}
+                              </button>
+                          </div>
+                      ))}
+                  </div>
+                  
+                  {/* Request Integration */}
+                  <div className="mt-16 text-center bg-gray-50 dark:bg-[#0f0e1a] rounded-[2rem] p-12 border border-dashed border-gray-200 dark:border-gray-800">
+                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Missing a tool?</h3>
+                     <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-md mx-auto">We are constantly adding new integrations. Let us know what you need to speed up your workflow.</p>
+                     <button className="px-6 py-3 bg-gray-200 dark:bg-white/10 text-gray-900 dark:text-white font-bold rounded-xl hover:bg-gray-300 dark:hover:bg-white/20 transition-colors">Request Integration</button>
+                  </div>
               </div>
+          );
 
-              <div className="p-8 bg-white dark:bg-[#131316] rounded-3xl border border-gray-200 dark:border-white/5 hover:border-indigo-500/30 transition-all">
-                <div className="w-12 h-12 bg-gray-100 dark:bg-white/10 rounded-xl flex items-center justify-center mb-6">
-                  <GitBranch className="w-6 h-6 text-gray-700 dark:text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">CI/CD Pipelines</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
-                  Trigger test generation and execution directly from your deployment pipelines.
-                </p>
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"><CheckCircle2 className="w-4 h-4 text-green-500" /> GitHub Actions</div>
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"><CheckCircle2 className="w-4 h-4 text-green-500" /> GitLab CI</div>
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"><CheckCircle2 className="w-4 h-4 text-green-500" /> Jenkins</div>
-                </div>
-              </div>
-
-              <div className="p-8 bg-white dark:bg-[#131316] rounded-3xl border border-gray-200 dark:border-white/5 hover:border-indigo-500/30 transition-all">
-                <div className="w-12 h-12 bg-purple-50 dark:bg-purple-900/20 rounded-xl flex items-center justify-center mb-6">
-                  <MessageSquare className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Communication</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
-                  Get real-time notifications when tests are generated or when automation suites finish.
-                </p>
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"><CheckCircle2 className="w-4 h-4 text-green-500" /> Slack</div>
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"><CheckCircle2 className="w-4 h-4 text-green-500" /> MS Teams</div>
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"><CheckCircle2 className="w-4 h-4 text-green-500" /> Discord</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-indigo-600 rounded-3xl p-8 md:p-12 text-center text-white relative overflow-hidden">
-              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
-              <div className="relative z-10 space-y-6">
-                <h2 className="text-2xl md:text-3xl font-bold">Ready to integrate?</h2>
-                <p className="text-indigo-100 max-w-2xl mx-auto">
-                  Our integration library is currently in private beta for Enterprise partners. Contact our engineering team to request early access.
-                </p>
-                <button className="px-8 py-4 bg-white text-indigo-600 font-bold rounded-xl hover:bg-indigo-50 transition-colors">
-                  Request Beta Access
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-
+      // ---------------- API DOCS PAGE ----------------
       case 'API_DOCS':
-        return (
-          <div className="max-w-6xl mx-auto px-6 py-12 animate-fade-in-up">
-            <div className="text-center mb-10 space-y-4">
-              <div className="inline-flex items-center justify-center p-4 bg-purple-50 dark:bg-purple-500/10 rounded-full mb-4 text-purple-600 dark:text-purple-400">
-                <Terminal className="w-8 h-8" />
+          return (
+              <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col lg:flex-row gap-12 animate-fade-in-up">
+                  {/* Sidebar */}
+                  <div className="lg:w-64 flex-shrink-0">
+                    <div className="sticky top-24 space-y-8">
+                      <div>
+                          <h4 className="font-bold text-gray-900 dark:text-white mb-4 px-2 uppercase text-xs tracking-wider">Getting Started</h4>
+                          <ul className="space-y-1 text-sm">
+                              <li><a href="#" className="block px-2 py-2 text-violet-600 dark:text-violet-400 font-medium bg-violet-50 dark:bg-violet-500/10 rounded-lg">Introduction</a></li>
+                              <li><a href="#" className="block px-2 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Authentication</a></li>
+                              <li><a href="#" className="block px-2 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Rate Limits</a></li>
+                              <li><a href="#" className="block px-2 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Errors</a></li>
+                          </ul>
+                      </div>
+                      <div>
+                          <h4 className="font-bold text-gray-900 dark:text-white mb-4 px-2 uppercase text-xs tracking-wider">Resources</h4>
+                          <ul className="space-y-1 text-sm">
+                              <li><a href="#gen" className="block px-2 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Generations</a></li>
+                              <li><a href="#hist" className="block px-2 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">History</a></li>
+                              <li><a href="#proj" className="block px-2 py-2 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Projects</a></li>
+                          </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 space-y-16">
+                      <div className="space-y-6 border-b border-gray-200 dark:border-white/5 pb-12">
+                          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">API Reference</h1>
+                          <p className="text-lg text-gray-600 dark:text-gray-300">
+                              Integrate QA GenAI's powerful generation engine directly into your CI/CD pipelines, internal developer platforms, or custom dashboards.
+                          </p>
+                          <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-xl p-4 flex gap-3">
+                              <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-500 flex-shrink-0" />
+                              <p className="text-sm text-amber-800 dark:text-amber-200">
+                                  API access is only available on the <strong>Enterprise Plan</strong>. Please contact sales to obtain an API key.
+                              </p>
+                          </div>
+                      </div>
+
+                      <div className="space-y-6">
+                          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Authentication</h2>
+                          <p className="text-gray-600 dark:text-gray-400">
+                              The QA GenAI API uses API keys to authenticate requests. You can view and manage your API keys in the Dashboard under Settings.
+                          </p>
+                          <p className="text-gray-600 dark:text-gray-400">
+                              Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, etc.
+                          </p>
+                          <CodeBlock code={`Authorization: Bearer sk_live_89234789234...`} />
+                      </div>
+
+                      <div className="space-y-10" id="gen">
+                          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Generations</h2>
+                          
+                          <Endpoint 
+                             method="POST" 
+                             path="/v1/generate" 
+                             description="Generates test cases and scripts from a raw text description or user story." 
+                          />
+                          
+                          <div className="space-y-4">
+                              <h3 className="text-sm font-bold uppercase text-gray-500">Request Body</h3>
+                              <CodeBlock language="json" code={`{
+  "project_id": "proj_123456",
+  "user_story": "As a user, I want to login with SSO so that I can access the dashboard securely.",
+  "options": {
+    "framework": "playwright",
+    "language": "typescript",
+    "include_bdd": true
+  }
+}`} />
+                          </div>
+
+                          <div className="space-y-4">
+                              <h3 className="text-sm font-bold uppercase text-gray-500">Response</h3>
+                              <CodeBlock language="json" code={`{
+  "id": "gen_987654",
+  "created_at": "2024-02-25T10:00:00Z",
+  "status": "completed",
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "title": "Verify SSO Login with valid credentials",
+      "priority": "High",
+      "steps": ["Navigate to login", "Click SSO", "Enter creds"],
+      "expected_result": "Dashboard loads"
+    }
+  ],
+  "automation_scripts": [
+    {
+       "framework": "playwright",
+       "code": "import { test } from '@playwright/test';..."
+    }
+  ]
+}`} />
+                          </div>
+                      </div>
+
+                      <div className="space-y-10" id="hist">
+                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">History</h2>
+                         <Endpoint 
+                             method="GET" 
+                             path="/v1/history" 
+                             description="Retrieves a paginated list of past generations." 
+                          />
+                          <CodeBlock language="bash" code={`curl https://api.qagenai.com/v1/history \\
+  -H "Authorization: Bearer sk_live_..." \\
+  -d limit=10`} />
+                      </div>
+                  </div>
               </div>
-              <h1 className="text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                Build on our Intelligence
-              </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                The <span className="text-purple-500 font-bold">QA GenAI API</span> allows you to programmatically generate test assets and integrate quality checks into any workflow.
-              </p>
-            </div>
+          );
 
-            <div className="grid md:grid-cols-2 gap-8 items-center mb-10">
-              <div className="space-y-8">
-                <div className="flex gap-4">
-                  <div className="w-12 h-12 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Cpu className="w-6 h-6 text-gray-700 dark:text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Custom QA Pipelines</h3>
-                    <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
-                      Build your own internal tools that trigger test generation whenever a product requirement document (PRD) is updated.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="w-12 h-12 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-6 h-6 text-amber-500" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Automated Regression</h3>
-                    <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
-                      Feed git diffs into our API to automatically suggest new test cases for changed code areas.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="w-12 h-12 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Box className="w-6 h-6 text-indigo-500" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Standard REST/JSON</h3>
-                    <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
-                      Simple, predictable, resource-oriented URLs, and uses HTTP response codes to indicate API errors.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Code Snippet */}
-              <div className="bg-[#0f0f10] rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
-                <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5 bg-white/5">
-                  <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-red-500/20"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500/20"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500/20"></div>
-                  </div>
-                  <span className="ml-2 text-xs text-gray-500 font-mono">POST /v1/generate</span>
-                </div>
-                <div className="p-6 overflow-x-auto">
-                  <pre className="text-sm font-mono leading-relaxed">
-                    <span className="text-purple-400">curl</span> https://api.qagenai.com/v1/generate \<br />
-                    -H <span className="text-green-400">"Authorization: Bearer $API_KEY"</span> \<br />
-                    -H <span className="text-green-400">"Content-Type: application/json"</span> \<br />
-                    -d <span className="text-yellow-400">'{`{
-    "story": "As a user...",
-    "types": ["manual", "automation"],
-    "framework": "playwright"
-  }`}'</span>
-                  </pre>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 dark:bg-[#131316] border border-gray-200 dark:border-white/10 rounded-3xl p-8 text-center max-w-3xl mx-auto">
-              <Lock className="w-8 h-8 text-gray-400 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">Enterprise Access Only</h2>
-              <p className="text-gray-500 dark:text-gray-400 mb-8">
-                API access is strictly limited to our Enterprise partners to ensure quality of service and security.
-              </p>
-              <button className="px-8 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl hover:opacity-90 transition-opacity">
-                Contact Sales for API Key
-              </button>
-            </div>
-          </div>
-        );
-
+      // ---------------- LEGAL PAGES ----------------
       case 'PRIVACY':
         return (
-          <div className="max-w-4xl mx-auto px-6 py-12 space-y-8 animate-fade-in-up text-gray-800 dark:text-gray-300">
-            <div className="border-b border-gray-200 dark:border-white/10 pb-6">
-              <div className="flex items-center gap-3 text-indigo-600 dark:text-indigo-400 mb-4">
-                <Shield className="w-8 h-8" />
-                <span className="font-bold tracking-wider text-sm uppercase">Privacy Policy</span>
-              </div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Your Privacy is Our Priority</h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400">
-                Transparent data practices for the modern enterprise. Last updated: {new Date().toLocaleDateString()}
-              </p>
-            </div>
+          <LegalLayout title="Privacy Policy" lastUpdated="February 24, 2025" onNavigate={onNavigate}>
+            <p>At QA GenAI Suite, accessible from https://qagenai.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by QA GenAI Suite and how we use it.</p>
+            
+            <h3>1. Information We Collect</h3>
+            <p>The personal information that you are asked to provide, and the reasons why you are asked to provide it, will be made clear to you at the point we ask you to provide your personal information.</p>
+            <ul>
+              <li><strong>Account Information:</strong> When you register for an Account, we may ask for your contact information, including items such as name, company name, address, email address, and telephone number.</li>
+              <li><strong>Usage Data:</strong> We collect information on how the Service is accessed and used. This Usage Data may include information such as your computer's Internet Protocol address (e.g. IP address), browser type, browser version, and the pages of our Service that you visit.</li>
+              <li><strong>Input Data:</strong> We process the User Stories and requirements you input into the system solely for the purpose of generating the requested output.</li>
+            </ul>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">1. Introduction</h2>
-              <p>
-                Welcome to QA GenAI Suite ("we," "our," or "us"). We are committed to protecting your privacy and ensuring the security of your data. This Privacy Policy explains how we collect, use, and safeguard your information when you use our AI-powered QA platform. By using our service, you agree to the collection and use of information in accordance with this policy.
-              </p>
-            </section>
+            <h3>2. How We Use Your Information</h3>
+            <p>We use the information we collect in various ways, including to:</p>
+            <ul>
+              <li>Provide, operate, and maintain our website</li>
+              <li>Improve, personalize, and expand our website</li>
+              <li>Understand and analyze how you use our website</li>
+              <li>Develop new products, services, features, and functionality</li>
+              <li>Send you emails (you can unsubscribe at any time)</li>
+            </ul>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">2. Information We Collect</h2>
-              <ul className="list-disc pl-6 space-y-2">
-                <li><strong>Account Information:</strong> When you register, we collect your name, email address, and authentication credentials.</li>
-                <li><strong>User Content:</strong> We process the User Stories, requirements, and text inputs you submit to the platform for the sole purpose of generating test assets.</li>
-                <li><strong>Generated Outputs:</strong> We store the Manual Test Cases, Automation Scripts (Cypress, Playwright, Selenium), and BDD Feature Files generated by the platform associated with your account history.</li>
-                <li><strong>Usage Data:</strong> We collect anonymized data regarding feature usage, performance metrics, and system interactions to improve our service.</li>
-              </ul>
-            </section>
+            <h3>3. Data Retention & AI Training</h3>
+            <p><strong>We do not use your proprietary data to train our public AI models.</strong> Your input data (User Stories, Acceptance Criteria) is processed ephemerally. For Enterprise customers, we offer specific data residency options and dedicated model instances.</p>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">3. How We Use Your Data</h2>
-              <p>We use the collected data for the following purposes:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>To provide and maintain our Service.</li>
-                <li>To generate QA assets based on your specific inputs.</li>
-                <li>To notify you about changes to our Service.</li>
-                <li>To provide customer support and troubleshoot technical issues.</li>
-                <li>To monitor the usage of our Service and detect/prevent technical issues.</li>
-              </ul>
-            </section>
+            <h3>4. Third Party Privacy Policies</h3>
+            <p>QA GenAI Suite's Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information.</p>
 
-            <div className="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-2xl border border-indigo-100 dark:border-indigo-500/30">
-              <div className="flex items-start gap-4">
-                <Shield className="w-6 h-6 text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="text-lg font-bold text-indigo-900 dark:text-white mb-2">AI Training & Data Privacy</h3>
-                  <p className="text-indigo-800 dark:text-indigo-200 font-medium">
-                    Strict No-Training Policy: We do NOT use your User Stories, proprietary requirements, or generated test assets to train our public AI models. Your data remains isolated and is used solely to generate your requested outputs. All processing is transient where possible, and persistent storage is strictly for your account history.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">4. Data Storage & Retention</h2>
-              <ul className="list-disc pl-6 space-y-2">
-                <li><strong>Free Plan:</strong> Generated history is retained for 24 hours to facilitate immediate usage and then permanently deleted.</li>
-                <li><strong>Paid Plans:</strong> History is retained indefinitely while your subscription is active to allow for regression testing and historical analysis. You may request deletion at any time.</li>
-                <li><strong>Enterprise:</strong> Custom retention policies are available upon request.</li>
-              </ul>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">5. Third-Party Services</h2>
-              <p>We may employ third-party companies and individuals due to the following reasons:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li><strong>Payment Processing:</strong> We use Stripe for secure payment processing. We do not store your credit card details.</li>
-                <li><strong>Cloud Infrastructure:</strong> We use Google Cloud Platform and Firebase for secure hosting and database services.</li>
-                <li><strong>AI Inference:</strong> We utilize enterprise-grade APIs from Google (Gemini) with strict data privacy agreements in place (Zero-retention policy on API endpoints).</li>
-              </ul>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">6. Contact Us</h2>
-              <p>If you have any questions about this Privacy Policy, please contact us:</p>
-              <ul className="list-none space-y-1">
-                <li>By email: privacy@qagenai.com</li>
-                <li>By visiting this page on our website: www.qagenai.com/contact</li>
-              </ul>
-            </section>
-          </div>
+            <h3>5. GDPR Data Protection Rights</h3>
+            <p>We would like to make sure you are fully aware of all of your data protection rights. Every user is entitled to the following:</p>
+            <ul>
+              <li>The right to access – You have the right to request copies of your personal data.</li>
+              <li>The right to rectification – You have the right to request that we correct any information you believe is inaccurate.</li>
+              <li>The right to erasure – You have the right to request that we erase your personal data, under certain conditions.</li>
+            </ul>
+          </LegalLayout>
         );
 
       case 'TERMS':
         return (
-          <div className="max-w-4xl mx-auto px-6 py-12 space-y-8 animate-fade-in-up text-gray-800 dark:text-gray-300">
-            <div className="border-b border-gray-200 dark:border-white/10 pb-6">
-              <div className="flex items-center gap-3 text-indigo-600 dark:text-indigo-400 mb-4">
-                <FileText className="w-8 h-8" />
-                <span className="font-bold tracking-wider text-sm uppercase">Terms of Service</span>
-              </div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Terms & Conditions</h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400">
-                Please read these terms carefully before using QA GenAI Suite. Last updated: {new Date().toLocaleDateString()}
-              </p>
-            </div>
+          <LegalLayout title="Terms of Service" lastUpdated="February 24, 2025" onNavigate={onNavigate}>
+            <h3>1. Terms</h3>
+            <p>By accessing this Website, accessible from https://qagenai.com, you are agreeing to be bound by these Website Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local laws.</p>
+            
+            <h3>2. Use License</h3>
+            <p>Permission is granted to temporarily download one copy of the materials on QA GenAI Suite's Website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+            <ul>
+              <li>modify or copy the materials;</li>
+              <li>use the materials for any commercial purpose or for any public display;</li>
+              <li>attempt to reverse engineer any software contained on QA GenAI Suite's Website;</li>
+              <li>remove any copyright or other proprietary notations from the materials; or</li>
+              <li>transfer the materials to another person or "mirror" the materials on any other server.</li>
+            </ul>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">1. Acceptance of Terms</h2>
-              <p>
-                By accessing or using QA GenAI Suite, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access the Service.
-              </p>
-            </section>
+            <h3>3. Disclaimer</h3>
+            <p>All the materials on QA GenAI Suite’s Website are provided "as is". QA GenAI Suite makes no warranties, may it be expressed or implied, therefore negates all other warranties. Furthermore, QA GenAI Suite does not make any representations concerning the accuracy or likely results of the use of the materials on its Website or otherwise relating to such materials or on any sites linked to this Website.</p>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">2. Description of Service</h2>
-              <p>
-                QA GenAI Suite is an AI-powered platform that assists Quality Assurance professionals by generating manual test cases, automation scripts, and BDD scenarios from user inputs. The Service is provided "as is" and is intended to augment, not replace, human QA oversight.
-              </p>
-            </section>
+            <h3>4. Limitations</h3>
+            <p>In no event shall QA GenAI Suite or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on QA GenAI Suite’s Website.</p>
 
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">3. User Accounts & Responsibilities</h2>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>You must provide accurate, complete, and current information at all times.</li>
-                <li>You are responsible for safeguarding the password that you use to access the Service.</li>
-                <li>You may not use the Service for any illegal or unauthorized purpose.</li>
-                <li>You agree not to reproduce, duplicate, copy, sell, resell or exploit any portion of the Service without express written permission by us.</li>
-              </ul>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">4. Usage Limits</h2>
-              <p>
-                <strong>Free Plan:</strong> Limited to 5 User Story generations per day. History is retained for 24 hours.<br />
-                <strong>Pro Plan:</strong> Unlimited generations. Permanent history retention. Access to Automation Scripts.<br />
-                <strong>Enterprise:</strong> Custom limits and API access as per contract.
-              </p>
-              <p>We reserve the right to throttle or terminate accounts that abuse the API or service limits.</p>
-            </section>
-
-            <div className="bg-amber-50 dark:bg-amber-900/10 p-6 rounded-2xl border border-amber-200 dark:border-amber-500/20">
-              <div className="flex items-start gap-4">
-                <AlertTriangle className="w-6 h-6 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="text-lg font-bold text-amber-900 dark:text-white mb-2">AI Disclaimer & Output Ownership</h3>
-                  <p className="text-amber-800 dark:text-amber-200 font-medium mb-3">
-                    <strong>Ownership:</strong> You retain full ownership of the User Stories you input and the Test Cases/Scripts generated by the platform. We claim no intellectual property rights over your generated QA assets.
-                  </p>
-                  <p className="text-amber-800 dark:text-amber-200 text-sm">
-                    <strong>Accuracy:</strong> AI-generated content is probabilistic. While we strive for high accuracy, the Service may produce incorrect, incomplete, or biased information. You acknowledge that all outputs should be reviewed and verified by a human QA professional before implementation in production environments.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">5. Limitation of Liability</h2>
-              <p>
-                In no event shall QA GenAI Suite, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
-              </p>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">6. Termination</h2>
-              <p>
-                We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms. Upon termination, your right to use the Service will immediately cease.
-              </p>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">7. Governing Law</h2>
-              <p>
-                These Terms shall be governed and construed in accordance with the laws of the United States, without regard to its conflict of law provisions.
-              </p>
-            </section>
-          </div>
-        );
-
-      case 'COOKIES':
-        return (
-          <div className="max-w-3xl mx-auto px-6 py-12 space-y-8 animate-fade-in-up text-gray-800 dark:text-gray-300">
-            <div className="border-b border-gray-200 dark:border-white/10 pb-6">
-              <div className="flex items-center gap-3 text-indigo-600 dark:text-indigo-400 mb-4">
-                <Eye className="w-8 h-8" />
-                <span className="font-bold tracking-wider text-sm uppercase">Cookie Policy</span>
-              </div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">How We Use Cookies</h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400">
-                Understanding your digital footprint on our platform. Last updated: {new Date().toLocaleDateString()}
-              </p>
-            </div>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">1. What Are Cookies?</h2>
-              <p>
-                Cookies are small text files that are placed on your computer or mobile device by websites that you visit. They are widely used in order to make websites work, or work more efficiently, as well as to provide information to the owners of the site.
-              </p>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">2. How We Use Cookies</h2>
-              <p>We use cookies for the following purposes:</p>
-              <div className="grid gap-4 mt-4">
-                <div className="p-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl">
-                  <h3 className="font-bold text-gray-900 dark:text-white mb-2">Essential Cookies</h3>
-                  <p className="text-sm">Necessary for the website to function (e.g., authentication, session management). You cannot opt-out of these.</p>
-                </div>
-                <div className="p-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl">
-                  <h3 className="font-bold text-gray-900 dark:text-white mb-2">Preference Cookies</h3>
-                  <p className="text-sm">Allow us to remember your settings such as theme (Light/Dark mode) and language preferences.</p>
-                </div>
-                <div className="p-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl">
-                  <h3 className="font-bold text-gray-900 dark:text-white mb-2">Analytics Cookies</h3>
-                  <p className="text-sm">Help us understand how visitors interact with the website by collecting and reporting information anonymously.</p>
-                </div>
-              </div>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">3. Third-Party Cookies</h2>
-              <p>
-                In addition to our own cookies, we may also use various third-parties cookies to report usage statistics of the Service and deliver advertisements on and through the Service. This includes services like Google Analytics and Stripe (for fraud detection).
-              </p>
-            </section>
-
-            <section className="space-y-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">4. Managing Cookies</h2>
-              <p>
-                You can control and/or delete cookies as you wish. You can delete all cookies that are already on your computer and you can set most browsers to prevent them from being placed. If you do this, however, you may have to manually adjust some preferences every time you visit a site and some services and functionalities may not work.
-              </p>
-            </section>
-          </div>
+            <h3>5. Governing Law</h3>
+            <p>Any claim related to QA GenAI Suite's Website shall be governed by the laws of the State of California without regards to its conflict of law provisions.</p>
+          </LegalLayout>
         );
 
       case 'SECURITY':
         return (
-          <div className="max-w-4xl mx-auto px-6 py-12 space-y-10 animate-fade-in-up text-gray-800 dark:text-gray-300">
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              <div className="inline-flex items-center justify-center p-3 bg-indigo-50 dark:bg-indigo-500/10 rounded-full mb-6 text-indigo-600 dark:text-indigo-400">
-                <Lock className="w-8 h-8" />
-              </div>
-              <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6">Security & Trust</h1>
-              <p className="text-xl text-gray-600 dark:text-gray-400">
-                Enterprise-grade security is built into every layer of QA GenAI Suite.
-              </p>
-            </div>
+          <LegalLayout title="Security Policy" lastUpdated="February 24, 2025" onNavigate={onNavigate}>
+            <p>Security is the foundation of our business. We protect your data with the same care that we protect our own.</p>
+            
+            <h3>1. Infrastructure Security</h3>
+            <p>Our application is hosted on secure, SOC 2 Type II compliant cloud infrastructure. We utilize Virtual Private Clouds (VPC) to isolate our network and strictly control ingress/egress traffic.</p>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="p-8 bg-white dark:bg-[#131316] rounded-2xl border border-gray-200 dark:border-white/5">
-                <Server className="w-8 h-8 text-indigo-500 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Infrastructure Security</h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Our platform runs on Google Cloud Platform (GCP), utilizing world-class data centers with SOC 2, ISO 27001, and HIPAA certifications. We employ automated vulnerability scanning and intrusion detection systems.
-                </p>
-              </div>
+            <h3>2. Data Encryption</h3>
+            <ul>
+              <li><strong>At Rest:</strong> All data stored in our databases is encrypted using AES-256 encryption.</li>
+              <li><strong>In Transit:</strong> All data transmitted between your client and our servers is encrypted using TLS 1.2 or higher.</li>
+            </ul>
 
-              <div className="p-8 bg-white dark:bg-[#131316] rounded-2xl border border-gray-200 dark:border-white/5">
-                <Lock className="w-8 h-8 text-emerald-500 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Data Encryption</h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  All data is encrypted in transit using TLS 1.3 and at rest using AES-256 encryption keys. This ensures that your user stories and generated test assets are protected from unauthorized access at all times.
-                </p>
-              </div>
+            <h3>3. Access Control</h3>
+            <p>We implement the principle of least privilege. Our employees do not have access to your customer data unless required for support purposes, and such access is logged and audited.</p>
 
-              <div className="p-8 bg-white dark:bg-[#131316] rounded-2xl border border-gray-200 dark:border-white/5">
-                <Cloud className="w-8 h-8 text-blue-500 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">AI Data Handling</h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  We operate with a "Zero-Retention for Training" policy. Data sent to our AI models is used strictly for inference and generation of your response. It is not stored by the model provider (Google) for model training or improvement.
-                </p>
-              </div>
+            <h3>4. Vulnerability Management</h3>
+            <p>We perform regular vulnerability scans and penetration testing. We also maintain a Bug Bounty program to encourage responsible disclosure of security issues.</p>
+          </LegalLayout>
+        );
 
-              <div className="p-8 bg-white dark:bg-[#131316] rounded-2xl border border-gray-200 dark:border-white/5">
-                <CheckCircle2 className="w-8 h-8 text-purple-500 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Access Control</h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  We implement strict Role-Based Access Control (RBAC) internally and for our Enterprise Team Workspaces. Customer data is logically segregated, and employee access is restricted to engineering support on a strictly need-to-know basis.
-                </p>
-              </div>
-            </div>
+      case 'COOKIES':
+        return (
+          <LegalLayout title="Cookie Policy" lastUpdated="February 24, 2025" onNavigate={onNavigate}>
+            <p>This Cookie Policy explains how QA GenAI Suite uses cookies and similar technologies to recognize you when you visit our website.</p>
+            
+            <h3>1. What are cookies?</h3>
+            <p>Cookies are small data files that are placed on your computer or mobile device when you visit a website. Cookies are widely used by website owners in order to make their websites work, or to work more efficiently, as well as to provide reporting information.</p>
 
-            <div className="bg-gray-50 dark:bg-white/5 rounded-3xl p-8 border border-gray-200 dark:border-white/10">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Vulnerability Reporting</h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                Security is a continuous journey. If you believe you have found a vulnerability in QA GenAI Suite, please please let us know right away. We appreciate your help in making our platform safer for everyone.
-              </p>
-              <a href="mailto:security@qagenai.com" className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors">
-                Contact Security Team
-              </a>
-            </div>
-          </div>
+            <h3>2. Why do we use cookies?</h3>
+            <p>We use first-party and third-party cookies for several reasons. Some cookies are required for technical reasons in order for our Website to operate, and we refer to these as "essential" or "strictly necessary" cookies. Other cookies also enable us to track and target the interests of our users to enhance the experience on our Online Properties.</p>
+
+            <h3>3. Types of cookies we use</h3>
+            <ul>
+              <li><strong>Essential website cookies:</strong> These cookies are strictly necessary to provide you with services available through our Website.</li>
+              <li><strong>Analytics and customization cookies:</strong> These cookies collect information that is used either in aggregate form to help us understand how our Website is being used or how effective our marketing campaigns are.</li>
+            </ul>
+
+            <h3>4. How can I control cookies?</h3>
+            <p>You have the right to decide whether to accept or reject cookies. You can exercise your cookie rights by setting your preferences in the Cookie Consent Manager.</p>
+          </LegalLayout>
         );
 
       default:
@@ -827,5 +870,9 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
     }
   };
 
-  return <div className="animate-in fade-in duration-500">{renderContent()}</div>;
+  return (
+    <div className="animate-in fade-in duration-500">
+      {renderContent()}
+    </div>
+  );
 };

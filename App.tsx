@@ -117,6 +117,7 @@ export default function App() {
   const [upgradeReason, setUpgradeReason] = useState<'LIMIT_REACHED' | 'FEATURE_LOCKED'>('LIMIT_REACHED');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Initialize theme
   useEffect(() => {
@@ -126,6 +127,13 @@ export default function App() {
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  // Scroll to top on page change
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [currentPage]);
 
   // Load usage and history on mount
   useEffect(() => {
@@ -363,11 +371,11 @@ export default function App() {
         return (
           <div className="px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in-up">
             {/* Input Section */}
-            <section className="glass rounded-3xl p-6 sm:p-8 space-y-6">
+            <section className="glass rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl shadow-violet-900/10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="space-y-1">
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-indigo-500" />
+                    <FileText className="w-5 h-5 text-violet-500" />
                     User Story Definition
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -377,7 +385,7 @@ export default function App() {
                 <div className="flex gap-2">
                   <button 
                     onClick={() => setUserStory(SAMPLE_STORY)}
-                    className="text-xs font-medium text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/20 px-4 py-2 rounded-full transition-colors"
+                    className="text-xs font-medium text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-500/10 hover:bg-violet-100 dark:hover:bg-violet-500/20 px-4 py-2 rounded-full transition-colors border border-violet-200 dark:border-violet-500/20"
                   >
                     Use Sample Story
                   </button>
@@ -391,12 +399,12 @@ export default function App() {
               </div>
 
               <div className="relative group">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl opacity-0 group-focus-within:opacity-20 transition duration-500"></div>
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-2xl opacity-20 group-focus-within:opacity-100 transition duration-500 blur-[2px]"></div>
                 <textarea
                   value={userStory}
                   onChange={(e) => setUserStory(e.target.value)}
                   placeholder="As a [role], I want [feature] so that [benefit]..."
-                  className="relative block w-full h-48 p-5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-[#050505] text-gray-900 dark:text-gray-100 shadow-inner focus:ring-0 focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none resize-y transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 font-mono text-sm leading-relaxed"
+                  className="relative block w-full h-48 p-5 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#08080a] text-gray-900 dark:text-gray-100 shadow-inner focus:ring-0 focus:border-transparent focus:outline-none resize-y transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 font-mono text-sm leading-relaxed"
                 />
                 <div className="absolute bottom-4 right-4 flex gap-2">
                   <input
@@ -408,7 +416,7 @@ export default function App() {
                   />
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="bg-white dark:bg-white/5 text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 p-2 rounded-lg shadow-lg border border-gray-200 dark:border-white/10 transition-all hover:scale-105 backdrop-blur-sm"
+                    className="bg-white dark:bg-[#1a1a1e] text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 p-2 rounded-lg shadow-lg border border-gray-200 dark:border-white/10 transition-all hover:scale-105 backdrop-blur-sm"
                     title="Upload Text File"
                   >
                     <Upload className="w-4 h-4" />
@@ -424,7 +432,7 @@ export default function App() {
                     relative overflow-hidden group w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold tracking-wide shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0
                     ${!userStory.trim() || appState === AppState.LOADING 
                       ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed' 
-                      : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-500/25'}
+                      : 'bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-violet-500/25'}
                   `}
                 >
                   {appState === AppState.LOADING ? (
@@ -446,8 +454,8 @@ export default function App() {
             <section className="space-y-6 pb-20">
               
               {appState === AppState.ERROR && (
-                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 p-4 rounded-xl flex items-center gap-3 animate-fade-in-up">
-                  <div className="bg-red-100 dark:bg-red-900/50 p-2 rounded-full">
+                <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-500/20 text-red-700 dark:text-red-300 p-4 rounded-xl flex items-center gap-3 animate-fade-in-up backdrop-blur-sm">
+                  <div className="bg-red-100 dark:bg-red-500/20 p-2 rounded-full">
                     <Eraser className="w-5 h-5" />
                   </div>
                   <p>{error}</p>
@@ -463,7 +471,7 @@ export default function App() {
                         onClick={() => handleTabChange('MANUAL')}
                         className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-all duration-300 whitespace-nowrap ${
                           viewMode === 'MANUAL'
-                            ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400 shadow-[0_10px_20px_-10px_rgba(99,102,241,0.5)]'
+                            ? 'border-violet-500 text-violet-600 dark:text-violet-400 shadow-[0_10px_20px_-10px_rgba(139,92,246,0.5)]'
                             : 'border-transparent text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                         }`}
                       >
@@ -472,7 +480,7 @@ export default function App() {
                         {testCases.length > 0 && (
                           <span className={`text-xs px-2 py-0.5 rounded-full ml-1 ${
                             viewMode === 'MANUAL' 
-                              ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300' 
+                              ? 'bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-300' 
                               : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
                           }`}>
                             {testCases.length}
@@ -483,7 +491,7 @@ export default function App() {
                         onClick={() => handleTabChange('BDD')}
                         className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-all duration-300 whitespace-nowrap ${
                           viewMode === 'BDD'
-                            ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400 shadow-[0_10px_20px_-10px_rgba(99,102,241,0.5)]'
+                            ? 'border-fuchsia-500 text-fuchsia-600 dark:text-fuchsia-400 shadow-[0_10px_20px_-10px_rgba(232,121,249,0.5)]'
                             : 'border-transparent text-gray-500 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                         }`}
                       >
@@ -492,7 +500,7 @@ export default function App() {
                         {gherkinScenarios.length > 0 && (
                           <span className={`text-xs px-2 py-0.5 rounded-full ml-1 ${
                             viewMode === 'BDD' 
-                              ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300' 
+                              ? 'bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-500/20 dark:text-fuchsia-300' 
                               : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
                           }`}>
                             {gherkinScenarios.length}
@@ -580,7 +588,7 @@ export default function App() {
                         <div className={viewMode === 'AUTOMATION' ? 'block' : 'hidden'}>
                           {automationScripts.length > 0 ? (
                             <div className="space-y-6">
-                              <div className="flex flex-wrap gap-2 p-1 bg-gray-100/50 dark:bg-white/5 rounded-xl w-fit">
+                              <div className="flex flex-wrap gap-2 p-1 bg-gray-100/50 dark:bg-white/5 rounded-xl w-fit border border-gray-200 dark:border-white/5">
                                 {FRAMEWORK_ORDER.map((framework) => {
                                     const hasScript = automationScripts.some(s => s.framework === framework);
                                     if (!hasScript) return null;
@@ -592,7 +600,7 @@ export default function App() {
                                         className={`
                                           flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
                                           ${activeFramework === framework 
-                                            ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm ring-1 ring-black/5 dark:ring-white/10' 
+                                            ? 'bg-white dark:bg-white/10 text-gray-900 dark:text-white shadow-sm ring-1 ring-black/5 dark:ring-white/10' 
                                             : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-white/5'}
                                         `}
                                       >
@@ -647,13 +655,13 @@ export default function App() {
   // ---------------------------------------------
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 font-sans selection:bg-indigo-500/30 ${isDarkMode ? 'dark bg-[#050505]' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen transition-colors duration-300 font-sans selection:bg-fuchsia-500/30 ${isDarkMode ? 'dark bg-[#030014]' : 'bg-gray-50'}`}>
       
       {/* Background Ambience - Global */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-500/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen opacity-40 animate-blob"></div>
-          <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen opacity-40 animate-blob animation-delay-2000"></div>
-          <div className="absolute top-[20%] right-[20%] w-[30%] h-[30%] bg-pink-500/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen opacity-30 animate-blob animation-delay-4000"></div>
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-violet-600/20 rounded-full blur-[120px] mix-blend-screen opacity-50 animate-blob"></div>
+          <div className="absolute top-[40%] right-[-10%] w-[40%] h-[40%] bg-fuchsia-600/20 rounded-full blur-[120px] mix-blend-screen opacity-50 animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-[-10%] left-[20%] w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[120px] mix-blend-screen opacity-50 animate-blob animation-delay-4000"></div>
           {/* Noise texture overlay for texture */}
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
       </div>
@@ -664,49 +672,51 @@ export default function App() {
 
           {/* Public Layout */}
           {isPublicPage && (
-            <div className="dark flex flex-col h-full overflow-y-auto bg-[#050505] text-slate-200 selection:bg-indigo-500/30">
-                <header className="sticky top-0 z-40 w-full backdrop-blur-xl border-b border-gray-200/50 dark:border-white/5 bg-white/70 dark:bg-[#050505]/70 transition-colors duration-300">
+            <div 
+              ref={scrollContainerRef}
+              className="dark flex flex-col h-full overflow-y-auto bg-[#030014] text-slate-200 selection:bg-fuchsia-500/30"
+            >
+                <header className="sticky top-0 z-40 w-full backdrop-blur-xl border-b border-white/5 bg-[#030014]/70 transition-colors duration-300">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="relative group cursor-pointer" onClick={() => setCurrentPage('LANDING')}>
-                                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
-                                <div className="relative bg-white dark:bg-black rounded-lg p-2 ring-1 ring-gray-900/5 leading-none flex items-center justify-center">
-                                    <Bot className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                                <div className="absolute -inset-1 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-lg blur opacity-50 group-hover:opacity-75 transition duration-200"></div>
+                                <div className="relative bg-black rounded-lg p-2 ring-1 ring-white/10 leading-none flex items-center justify-center">
+                                    <Bot className="w-6 h-6 text-white" />
                                 </div>
                             </div>
-                            <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 cursor-pointer" onClick={() => setCurrentPage('LANDING')}>
+                            <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-violet-200 to-fuchsia-200 cursor-pointer tracking-tight" onClick={() => setCurrentPage('LANDING')}>
                             QA GenAI
                             </h1>
                         </div>
                         
                         {/* Desktop Navigation */}
                         <div className="hidden md:flex items-center gap-8 mr-8">
-                          <button onClick={() => scrollToSection('features')} className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition-colors">Features</button>
-                          <button onClick={() => scrollToSection('pricing')} className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition-colors">Pricing</button>
-                          <button onClick={() => setCurrentPage('BLOG')} className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition-colors">Blog</button>
-                          <button onClick={() => setCurrentPage('ABOUT')} className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition-colors">About</button>
-                          <button onClick={() => setCurrentPage('CONTACT')} className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition-colors">Contact</button>
+                          <button onClick={() => scrollToSection('features')} className="text-sm font-medium text-gray-300 hover:text-white hover:scale-105 transition-all">Features</button>
+                          <button onClick={() => scrollToSection('pricing')} className="text-sm font-medium text-gray-300 hover:text-white hover:scale-105 transition-all">Pricing</button>
+                          <button onClick={() => setCurrentPage('BLOG')} className="text-sm font-medium text-gray-300 hover:text-white hover:scale-105 transition-all">Blog</button>
+                          <button onClick={() => setCurrentPage('ABOUT')} className="text-sm font-medium text-gray-300 hover:text-white hover:scale-105 transition-all">About</button>
                         </div>
 
                         <div className="flex items-center gap-4">
                             {isLoggedIn ? (
                                 <button 
                                     onClick={() => setCurrentPage('APP')}
-                                    className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+                                    className="text-sm font-bold text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full border border-white/5 transition-all"
                                 >
                                     Go to App
                                 </button>
                             ) : (
                                 <button 
                                     onClick={() => setShowAuthModal(true)}
-                                    className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition-colors"
+                                    className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
                                 >
                                     Sign In
                                 </button>
                             )}
                             <button
                                 onClick={toggleTheme}
-                                className="p-2 rounded-full bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-all border border-transparent dark:border-white/5"
+                                className="p-2 rounded-full bg-white/5 text-gray-300 hover:bg-white/10 transition-all border border-white/5"
                                 >
                                 {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                             </button>
@@ -743,10 +753,13 @@ export default function App() {
                 onUpgrade={() => { setUpgradeReason('LIMIT_REACHED'); setShowUpgradeModal(true); }}
               />
 
-              <main className="flex-1 overflow-y-auto relative scroll-smooth bg-gray-50/50 dark:bg-[#050505]/50 backdrop-blur-sm">
+              <main 
+                ref={scrollContainerRef}
+                className="flex-1 overflow-y-auto relative scroll-smooth bg-gray-50/50 dark:bg-[#030014]/80 backdrop-blur-xl"
+              >
                 <div className="relative z-10 min-h-full flex flex-col">
                     {/* Mobile Header */}
-                    <div className="md:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-white/5 bg-white dark:bg-[#050505]">
+                    <div className="md:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-white/5 bg-white dark:bg-[#030014]">
                         <span className="font-bold text-gray-900 dark:text-white">QA GenAI</span>
                         <button><Menu className="w-6 h-6 text-gray-500" /></button>
                     </div>
