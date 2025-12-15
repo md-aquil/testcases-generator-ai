@@ -145,7 +145,7 @@ export const sendChatMessage = async (
     const testSummary = testCases.map(tc => `- [${tc.priority}] ${tc.title}`).join('\n');
 
     const appKnowledgeBase = `
-    You are the "QA GenAI Suite" Assistant. Your goal is to help users navigate the app and understand their test results.
+    You are the "ZiaraQA" Assistant. Your goal is to help users navigate the app and understand their test results.
     
     APP CAPABILITIES:
     1. Generate Manual Test Cases (Available on all plans).

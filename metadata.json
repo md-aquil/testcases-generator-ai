@@ -1,5 +1,6 @@
+
 {
-  "name": "QA GenAI Suite",
-  "description": "An AI-powered tool for generating comprehensive manual test cases from user stories. Export your test plans instantly to CSV.",
+  "name": "ZiaraQA",
+  "description": "AI Powered Test Case Generator. Transform user stories into comprehensive manual test cases and automation scripts.",
   "requestFramePermissions": []
 }

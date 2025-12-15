@@ -17,7 +17,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
   return (
     <footer className="bg-gray-50 dark:bg-[#0d0d0f] border-t border-gray-200 dark:border-white/5 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 py-10">
+      <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           
           {/* Brand */}
@@ -26,7 +26,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 cursor-pointer"
               onClick={() => onNavigate('LANDING')}
             >
-              QA GenAI Suite
+              ZiaraQA
             </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
               Empowering QA teams with AI-driven testing strategies. Generate, automate, and ship faster.
@@ -74,7 +74,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         <div className="pt-8 border-t border-gray-200 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            © {new Date().getFullYear()} QA GenAI Suite. All rights reserved.
+            © {new Date().getFullYear()} ZiaraQA. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
             <div className="flex items-center gap-2">

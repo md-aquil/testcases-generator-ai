@@ -28,7 +28,7 @@ const MessageText: React.FC<{ content: string }> = ({ content }) => {
 export const ChatWidget: React.FC<ChatWidgetProps> = ({ userStory, testCases, userPlan }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: '1', role: 'ai', content: 'Hi! I can help you understand the generated tests or answer questions about the QA GenAI Suite features.', timestamp: new Date() }
+    { id: '1', role: 'ai', content: 'Hi! I can help you understand the generated tests or answer questions about the ZiaraQA features.', timestamp: new Date() }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);

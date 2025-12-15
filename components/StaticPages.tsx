@@ -144,7 +144,7 @@ const LegalLayout = ({ title, lastUpdated, children, onNavigate }: any) => (
              <p className="text-xs text-indigo-600 dark:text-indigo-300 mb-3">
                Contact our legal team for clarifications.
              </p>
-             <a href="mailto:legal@qagenai.com" className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">legal@qagenai.com</a>
+             <a href="mailto:legal@ziaraqa.com" className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">legal@ziaraqa.com</a>
           </div>
        </div>
     </div>
@@ -192,7 +192,7 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
                        For years, QA engineers have been stuck in a loop: Read a Jira ticket, write the same test steps in a spreadsheet, translate them into Gherkin, and then write the boilerplate code for automation. It's tedious, error-prone, and slow.
                     </p>
                     <p>
-                       We built QA GenAI Suite to break this cycle. We believe QA talent should be focused on <strong>exploratory testing, strategy, and complex edge cases</strong>—not on writing documentation that an AI can generate in seconds.
+                       We built ZiaraQA to break this cycle. We believe QA talent should be focused on <strong>exploratory testing, strategy, and complex edge cases</strong>—not on writing documentation that an AI can generate in seconds.
                     </p>
                     <p>
                        Our models are fine-tuned specifically on millions of high-quality test plans and automation repositories, ensuring that the output isn't just generic text—it's executable, reliable engineering work.
@@ -301,7 +301,7 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
                <div className="p-10 bg-white dark:bg-[#0f0e1a] rounded-[2rem] border border-gray-200 dark:border-white/5 h-full">
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Our Culture</h3>
                   <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-8 text-lg">
-                    We believe in "Engineering First". Everyone at QA GenAI Suite codes, tests, and deploys. We value autonomy, deep work, and shipping fast without breaking things.
+                    We believe in "Engineering First". Everyone at ZiaraQA codes, tests, and deploys. We value autonomy, deep work, and shipping fast without breaking things.
                   </p>
                   <ul className="space-y-4">
                      {['Remote-first DNA (Work from anywhere)', 'Zero bureaucracy / Flat hierarchy', 'Open source contributors', 'Competitive Equity & Salary'].map((item, i) => (
@@ -401,7 +401,7 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
                          <div>
                             <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">Email</h3>
                             <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">Our friendly team is here to help.</p>
-                            <a href="mailto:support@qagenai.com" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">support@qagenai.com</a>
+                            <a href="mailto:support@ziaraqa.com" className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline">support@ziaraqa.com</a>
                          </div>
                       </div>
                       
@@ -433,7 +433,7 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
                       <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Frequently Asked Questions</h3>
                       <div className="space-y-4">
                          {[
-                           { q: "Can I use QA GenAI for free?", a: "Yes! Our Starter plan includes 5 free generations per day." },
+                           { q: "Can I use ZiaraQA for free?", a: "Yes! Our Starter plan includes 5 free generations per day." },
                            { q: "Is my data secure?", a: "Absolutely. We use enterprise-grade encryption and do not train on your data." },
                            { q: "Do you offer custom enterprise contracts?", a: "Yes, for teams larger than 20, we offer custom billing and SLAs." }
                          ].map((faq, i) => (
@@ -594,7 +594,7 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
                   <SectionHeader 
                     label="Ecosystem"
                     title="Integrations"
-                    subtitle="Connect QA GenAI Suite with the tools you already use to create a seamless quality workflow."
+                    subtitle="Connect ZiaraQA with the tools you already use to create a seamless quality workflow."
                   />
 
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -671,7 +671,7 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
                       <div className="space-y-6 border-b border-gray-200 dark:border-white/5 pb-12">
                           <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">API Reference</h1>
                           <p className="text-lg text-gray-600 dark:text-gray-300">
-                              Integrate QA GenAI's powerful generation engine directly into your CI/CD pipelines, internal developer platforms, or custom dashboards.
+                              Integrate ZiaraQA's powerful generation engine directly into your CI/CD pipelines, internal developer platforms, or custom dashboards.
                           </p>
                           <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 rounded-xl p-4 flex gap-3">
                               <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-500 flex-shrink-0" />
@@ -684,7 +684,7 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
                       <div className="space-y-6">
                           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Authentication</h2>
                           <p className="text-gray-600 dark:text-gray-400">
-                              The QA GenAI API uses API keys to authenticate requests. You can view and manage your API keys in the Dashboard under Settings.
+                              The ZiaraQA API uses API keys to authenticate requests. You can view and manage your API keys in the Dashboard under Settings.
                           </p>
                           <p className="text-gray-600 dark:text-gray-400">
                               Your API keys carry many privileges, so be sure to keep them secure! Do not share your secret API keys in publicly accessible areas such as GitHub, client-side code, etc.
@@ -746,7 +746,7 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
                              path="/v1/history" 
                              description="Retrieves a paginated list of past generations." 
                           />
-                          <CodeBlock language="bash" code={`curl https://api.qagenai.com/v1/history \\
+                          <CodeBlock language="bash" code={`curl https://api.ziaraqa.com/v1/history \\
   -H "Authorization: Bearer sk_live_..." \\
   -d limit=10`} />
                       </div>
@@ -758,7 +758,7 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
       case 'PRIVACY':
         return (
           <LegalLayout title="Privacy Policy" lastUpdated="February 24, 2025" onNavigate={onNavigate}>
-            <p>At QA GenAI Suite, accessible from https://qagenai.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by QA GenAI Suite and how we use it.</p>
+            <p>At ZiaraQA, accessible from https://ziaraqa.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by ZiaraQA and how we use it.</p>
             
             <h3>1. Information We Collect</h3>
             <p>The personal information that you are asked to provide, and the reasons why you are asked to provide it, will be made clear to you at the point we ask you to provide your personal information.</p>
@@ -782,7 +782,7 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
             <p><strong>We do not use your proprietary data to train our public AI models.</strong> Your input data (User Stories, Acceptance Criteria) is processed ephemerally. For Enterprise customers, we offer specific data residency options and dedicated model instances.</p>
 
             <h3>4. Third Party Privacy Policies</h3>
-            <p>QA GenAI Suite's Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information.</p>
+            <p>ZiaraQA's Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information.</p>
 
             <h3>5. GDPR Data Protection Rights</h3>
             <p>We would like to make sure you are fully aware of all of your data protection rights. Every user is entitled to the following:</p>
@@ -798,26 +798,26 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
         return (
           <LegalLayout title="Terms of Service" lastUpdated="February 24, 2025" onNavigate={onNavigate}>
             <h3>1. Terms</h3>
-            <p>By accessing this Website, accessible from https://qagenai.com, you are agreeing to be bound by these Website Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local laws.</p>
+            <p>By accessing this Website, accessible from https://ziaraqa.com, you are agreeing to be bound by these Website Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local laws.</p>
             
             <h3>2. Use License</h3>
-            <p>Permission is granted to temporarily download one copy of the materials on QA GenAI Suite's Website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+            <p>Permission is granted to temporarily download one copy of the materials on ZiaraQA's Website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
             <ul>
               <li>modify or copy the materials;</li>
               <li>use the materials for any commercial purpose or for any public display;</li>
-              <li>attempt to reverse engineer any software contained on QA GenAI Suite's Website;</li>
+              <li>attempt to reverse engineer any software contained on ZiaraQA's Website;</li>
               <li>remove any copyright or other proprietary notations from the materials; or</li>
               <li>transfer the materials to another person or "mirror" the materials on any other server.</li>
             </ul>
 
             <h3>3. Disclaimer</h3>
-            <p>All the materials on QA GenAI Suite’s Website are provided "as is". QA GenAI Suite makes no warranties, may it be expressed or implied, therefore negates all other warranties. Furthermore, QA GenAI Suite does not make any representations concerning the accuracy or likely results of the use of the materials on its Website or otherwise relating to such materials or on any sites linked to this Website.</p>
+            <p>All the materials on ZiaraQA’s Website are provided "as is". ZiaraQA makes no warranties, may it be expressed or implied, therefore negates all other warranties. Furthermore, ZiaraQA does not make any representations concerning the accuracy or likely results of the use of the materials on its Website or otherwise relating to such materials or on any sites linked to this Website.</p>
 
             <h3>4. Limitations</h3>
-            <p>In no event shall QA GenAI Suite or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on QA GenAI Suite’s Website.</p>
+            <p>In no event shall ZiaraQA or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on ZiaraQA’s Website.</p>
 
             <h3>5. Governing Law</h3>
-            <p>Any claim related to QA GenAI Suite's Website shall be governed by the laws of the State of California without regards to its conflict of law provisions.</p>
+            <p>Any claim related to ZiaraQA's Website shall be governed by the laws of the State of California without regards to its conflict of law provisions.</p>
           </LegalLayout>
         );
 
@@ -846,7 +846,7 @@ export const StaticPage: React.FC<StaticPageProps> = ({ type, onNavigate }) => {
       case 'COOKIES':
         return (
           <LegalLayout title="Cookie Policy" lastUpdated="February 24, 2025" onNavigate={onNavigate}>
-            <p>This Cookie Policy explains how QA GenAI Suite uses cookies and similar technologies to recognize you when you visit our website.</p>
+            <p>This Cookie Policy explains how ZiaraQA uses cookies and similar technologies to recognize you when you visit our website.</p>
             
             <h3>1. What are cookies?</h3>
             <p>Cookies are small data files that are placed on your computer or mobile device when you visit a website. Cookies are widely used by website owners in order to make their websites work, or to work more efficiently, as well as to provide reporting information.</p>

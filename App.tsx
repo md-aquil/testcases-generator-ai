@@ -686,7 +686,7 @@ export default function App() {
                                 </div>
                             </div>
                             <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-violet-200 to-fuchsia-200 cursor-pointer tracking-tight" onClick={() => setCurrentPage('LANDING')}>
-                            QA GenAI
+                            ZiaraQA
                             </h1>
                         </div>
                         
@@ -760,7 +760,7 @@ export default function App() {
                 <div className="relative z-10 min-h-full flex flex-col">
                     {/* Mobile Header */}
                     <div className="md:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-white/5 bg-white dark:bg-[#030014]">
-                        <span className="font-bold text-gray-900 dark:text-white">QA GenAI</span>
+                        <span className="font-bold text-gray-900 dark:text-white">ZiaraQA</span>
                         <button><Menu className="w-6 h-6 text-gray-500" /></button>
                     </div>
                     

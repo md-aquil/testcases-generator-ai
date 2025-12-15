@@ -56,7 +56,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <Bot className="w-5 h-5" />
         </div>
         <div>
-          <h1 className="font-bold text-gray-900 dark:text-white leading-tight tracking-tight text-lg">QA GenAI</h1>
+          <h1 className="font-bold text-gray-900 dark:text-white leading-tight tracking-tight text-lg">ZiaraQA</h1>
           <p className="text-[10px] text-fuchsia-500 font-bold tracking-widest uppercase opacity-80">Suite</p>
         </div>
       </div>
