@@ -36,6 +36,7 @@ export interface ChatMessage {
 
 export enum AppState {
   IDLE = 'IDLE',
+  ANALYZING = 'ANALYZING', // For Requirement Refiner
   LOADING = 'LOADING',
   SUCCESS = 'SUCCESS',
   ERROR = 'ERROR'
@@ -47,21 +48,34 @@ export type FrameworkOption =
   | 'Selenium (Java)' 
   | 'Selenium (Python)';
 
-export type UserPlan = 'STARTER' | 'PRO' | 'ENTERPRISE';
+export type UserPlan = 'STARTER' | 'PRO' | 'AGENCY';
 
 export interface UsageData {
   date: string; // ISO date string YYYY-MM-DD
-  count: number;
+  storiesCount: number;
+  dataFactoryCount: number;
+  unitTestCount: number;
+  apiTestCount: number;
 }
+
+// ✅ NEW: Type identify karne ke liye
+export type GenerationType = 'USER_STORY' | 'SYNTHETIC_DATA' | 'UNIT_TEST' | 'API_TEST';
 
 export interface HistoryItem {
   id: string;
   date: string;
-  userStory: string;
-  testCaseCount: number;
-  scriptCount: number;
-  testCases: TestCase[];
-  automationScripts: AutomationScript[];
+  type: GenerationType; // 🔥 New Field
+
+  // Fields for User Story Generator (Optional now)
+  userStory?: string;
+  testCaseCount?: number;
+  scriptCount?: number;
+  testCases?: TestCase[];
+  automationScripts?: AutomationScript[];
+
+  // Fields for Data Factory (Optional)
+  prompt?: string;        // User ne kya manga tha
+  syntheticData?: string; // Generated JSON string
 }
 
 export interface TeamMember {
@@ -86,9 +100,20 @@ export interface UserProfile {
   jobTitle?: string;
 }
 
+export interface AnalysisResult {
+  isAmbiguous: boolean;
+  issues: string[];
+  suggestions: string[];
+  missingDetails: string[];
+}
+
 export type Page = 
   | 'LANDING' 
   | 'APP' 
+  | 'DATA_FACTORY'
+  | 'UNIT_TEST'
+  | 'API_TEST'
+  | 'MANAGER'
   | 'HISTORY' 
   | 'TEAM' 
   | 'PROFILE' 

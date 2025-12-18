@@ -10,11 +10,10 @@ import {
   FileCode,
   ShieldCheck,
   Zap,
-  Clock,
-  Search,
-  Layout,
-  Play,
-  Terminal
+  Server,
+  Database,
+  Terminal,
+  Lock
 } from 'lucide-react';
 
 interface LandingPageProps {
@@ -149,18 +148,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onContac
 
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-fuchsia-300 text-sm font-medium mb-8 backdrop-blur-md hover:bg-white/10 transition-colors cursor-default shadow-[0_0_20px_rgba(232,121,249,0.15)]">
           <Sparkles className="w-4 h-4 fill-fuchsia-400 text-fuchsia-400" />
-          <span>New: Multi-Framework Automation Export</span>
+          <span>New: Code-to-Test & API Generators</span>
         </div>
         
         <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.1] mb-6">
           ZiaraQA <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400 animate-pulse-glow">
-            AI Powered Test Case Generator
+            AI Powered Test Engineering
           </span>
         </h1>
         
         <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-10">
-          Stop writing manual test cases by hand. ZiaraQA analyzes your requirements and instantly generates comprehensive test plans, BDD scenarios, and ready-to-run automation code.
+          Turn User Stories into production test suites. Generate manual steps, automation code, synthetic data, and API tests in seconds.
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -238,157 +237,73 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onContac
         </div>
       </section>
 
-      {/* --- WHY CHOOSE US --- */}
-      <section className="bg-white/[0.02] border-y border-white/5 py-24">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white">Why Modern Teams Switch to ZiaraQA</h2>
-              <p className="text-lg text-slate-400 leading-relaxed">
-                Traditional QA processes are manual, slow, and prone to human error. We leverage Large Language Models (LLMs) to automate the thinking process, not just the execution.
-              </p>
-              
-              <div className="space-y-6">
-                {[
-                  { title: '10x Faster Coverage', desc: 'Generate 50+ test cases in the time it takes to write one manually.' },
-                  { title: 'Reduce Human Error', desc: 'AI spots edge cases and logic gaps that humans often overlook.' },
-                  { title: 'Instant Automation', desc: 'Skip the boilerplate. Get Playwright & Cypress code ready to commit.' }
-                ].map((benefit, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="mt-1 w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0 border border-emerald-500/20">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-bold text-white mb-1">{benefit.title}</h4>
-                      <p className="text-sm text-slate-400">{benefit.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Comparison Visual */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 rounded-3xl blur-3xl"></div>
-              <div className="relative bg-[#0F0E12] border border-white/10 rounded-3xl p-8 space-y-6">
-                <div className="flex items-center justify-between border-b border-white/5 pb-6">
-                  <h3 className="font-bold text-white">Manual Process</h3>
-                  <span className="text-red-400 font-mono text-sm">2-4 Hours</span>
-                </div>
-                <div className="space-y-3 opacity-50">
-                  <div className="h-2 bg-gray-700 rounded w-3/4"></div>
-                  <div className="h-2 bg-gray-700 rounded w-1/2"></div>
-                  <div className="h-2 bg-gray-700 rounded w-full"></div>
-                </div>
-                
-                <div className="flex items-center justify-center py-4">
-                  <ArrowRight className="w-6 h-6 text-gray-600 rotate-90" />
-                </div>
-
-                <div className="flex items-center justify-between border-b border-white/5 pb-6">
-                  <h3 className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">ZiaraQA</h3>
-                  <span className="text-emerald-400 font-mono text-sm font-bold">~15 Seconds</span>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-violet-500/10 border border-violet-500/20 p-3 rounded-lg">
-                    <div className="w-full h-10 bg-violet-500/20 rounded animate-pulse"></div>
-                  </div>
-                  <div className="bg-fuchsia-500/10 border border-fuchsia-500/20 p-3 rounded-lg">
-                    <div className="w-full h-10 bg-fuchsia-500/20 rounded animate-pulse"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* --- FEATURES GRID --- */}
       <section id="features" className="max-w-7xl mx-auto px-4 w-full scroll-mt-24">
         <div className="text-center mb-16">
-             <h2 className="text-3xl font-bold text-white mb-4">Complete QA Coverage</h2>
-             <p className="text-slate-400">From manual steps to executable code.</p>
+             <h2 className="text-3xl font-bold text-white mb-4">Platform Capabilities</h2>
+             <p className="text-slate-400">Everything you need to ship quality software faster.</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          {/* Feature 1 - Manual Testing (Large) */}
-          <div className="md:col-span-2 group relative p-8 rounded-3xl bg-[#0b0a14] border border-white/5 overflow-hidden hover:border-violet-500/50 transition-colors">
-            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative z-10 h-full flex flex-col justify-between">
-               <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 bg-violet-500/10 rounded-xl flex items-center justify-center border border-violet-500/20">
-                        <CheckCircle2 className="w-6 h-6 text-violet-400" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white">Manual Test Cases</h3>
-                  </div>
-                  <p className="text-slate-400 max-w-md mb-6 leading-relaxed">
-                    AI analyzes requirements to generate comprehensive steps including <span className="text-violet-300 font-semibold">Pre-conditions</span>, <span className="text-fuchsia-300 font-semibold">Test Data</span>, and <span className="text-indigo-300 font-semibold">Expected Results</span>.
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                     <span className="px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-xs font-semibold text-violet-300">Happy Path</span>
-                     <span className="px-3 py-1 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-xs font-semibold text-fuchsia-300">Negative Scenarios</span>
-                     <span className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-semibold text-indigo-300">Edge Cases</span>
-                  </div>
-               </div>
+          <div className="p-8 rounded-3xl bg-[#0b0a14] border border-white/5 hover:border-fuchsia-500/50 transition-colors">
+            <div className="w-12 h-12 bg-fuchsia-500/10 rounded-xl flex items-center justify-center mb-4 border border-fuchsia-500/20">
+               <Database className="w-6 h-6 text-fuchsia-400" />
             </div>
+            <h3 className="text-xl font-bold text-white mb-2">Synthetic Data Factory</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Generate realistic and context-aware test data using natural language prompts. Valid Indian mobile numbers, Stripe-safe cards, and more.
+            </p>
           </div>
 
-          {/* Feature 2 - Automation (Tall) */}
-          <div className="md:row-span-2 group relative p-8 rounded-3xl bg-[#0b0a14] border border-white/5 overflow-hidden hover:border-fuchsia-500/50 transition-colors flex flex-col">
-             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500 pointer-events-none">
-               <Cpu className="w-48 h-48 text-fuchsia-500" />
-             </div>
-             <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 bg-fuchsia-500/10 rounded-xl flex items-center justify-center border border-fuchsia-500/20">
-                        <Code2 className="w-6 h-6 text-fuchsia-400" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white">Automation Scripts</h3>
-                </div>
-                <p className="text-slate-400 leading-relaxed mb-6 text-sm">
-                  Convert manual steps into runnable code instantly. Supports Page Object Model pattern.
-                </p>
-                <div className="space-y-3">
-                    {['Playwright (TS)', 'Cypress (JS)', 'Selenium (Java)', 'Selenium (Python)'].map(fw => (
-                        <div key={fw} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 group-hover:bg-white/10 transition-colors">
-                            <div className="w-2 h-2 bg-fuchsia-400 rounded-full shadow-[0_0_8px_rgba(232,121,249,0.8)]"></div>
-                            <span className="text-sm text-slate-300 font-mono font-medium">{fw}</span>
-                        </div>
-                    ))}
-                </div>
-             </div>
+          <div className="p-8 rounded-3xl bg-[#0b0a14] border border-white/5 hover:border-blue-500/50 transition-colors">
+            <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-4 border border-blue-500/20">
+               <FileCode className="w-6 h-6 text-blue-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Code-to-Test</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Developers can paste React components or Node.js functions, and AI automatically generates clean Unit Tests (Jest/Mocha).
+            </p>
           </div>
 
-          {/* Feature 3 - BDD */}
-          <div className="group relative p-8 rounded-3xl bg-[#0b0a14] border border-white/5 overflow-hidden hover:border-emerald-500/50 transition-colors">
-            <div className="relative z-10">
-               <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center border border-emerald-500/20">
-                      <FileCode className="w-6 h-6 text-emerald-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white">BDD Scenarios</h3>
-               </div>
-               <p className="text-slate-400 text-sm mb-4">
-                 Auto-generated <strong className="text-emerald-400">Gherkin</strong> syntax (Given-When-Then) ready for Cucumber or SpecFlow.
-               </p>
+          <div className="p-8 rounded-3xl bg-[#0b0a14] border border-white/5 hover:border-orange-500/50 transition-colors">
+            <div className="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-4 border border-orange-500/20">
+               <Server className="w-6 h-6 text-orange-400" />
             </div>
+            <h3 className="text-xl font-bold text-white mb-2">API Test Generator</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Input a Swagger/OpenAPI URL and automatically generate a Postman Collection with positive and negative test assertions.
+            </p>
           </div>
 
-          {/* Feature 4 - Collaboration */}
-          <div className="group relative p-8 rounded-3xl bg-[#0b0a14] border border-white/5 overflow-hidden hover:border-blue-500/50 transition-colors">
-            <div className="relative z-10">
-               <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center border border-blue-500/20">
-                      <Share2 className="w-6 h-6 text-blue-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white">Collaboration</h3>
-               </div>
-               <p className="text-slate-400 text-sm mb-4">
-                 One-click export to <strong>Jira</strong>, CSV, or share via Team Workspace.
-               </p>
+          <div className="p-8 rounded-3xl bg-[#0b0a14] border border-white/5 hover:border-violet-500/50 transition-colors">
+            <div className="w-12 h-12 bg-violet-500/10 rounded-xl flex items-center justify-center mb-4 border border-violet-500/20">
+               <CheckCircle2 className="w-6 h-6 text-violet-400" />
             </div>
+            <h3 className="text-xl font-bold text-white mb-2">Requirement Refiner</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              AI analyzes your user story before generation, highlighting ambiguities and missing edge cases to prevent assumptions.
+            </p>
+          </div>
+
+          <div className="p-8 rounded-3xl bg-[#0b0a14] border border-white/5 hover:border-indigo-500/50 transition-colors">
+            <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-4 border border-indigo-500/20">
+               <Cpu className="w-6 h-6 text-indigo-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Automation Scripts</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Convert manual steps into runnable code instantly. Supports Playwright, Cypress, and Selenium (Java/Python).
+            </p>
+          </div>
+
+          <div className="p-8 rounded-3xl bg-[#0b0a14] border border-white/5 hover:border-emerald-500/50 transition-colors">
+            <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-4 border border-emerald-500/20">
+               <Share2 className="w-6 h-6 text-emerald-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Jira Integration</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              One-click ticket creation. Push your generated test cases directly to your Jira project (Pro Plan).
+            </p>
           </div>
 
         </div>
@@ -413,48 +328,52 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onContac
               <span className="text-slate-500">/mo</span>
             </div>
             <ul className="space-y-4 mb-8 flex-1 w-full text-slate-400 text-sm">
-              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-slate-600" /> 5 Stories / day</li>
+              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-slate-600" /> 5 User Stories / day</li>
               <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-slate-600" /> Manual Test Cases</li>
-              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-slate-600" /> 24-hour History Retention</li>
+              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-slate-600" /> 1 Selenium Framework</li>
+              <li className="flex items-center gap-3"><Lock className="w-4 h-4 text-gray-500" /> Limited Data Factory (1/day)</li>
             </ul>
             <button onClick={onGetStarted} className="w-full py-3 px-4 rounded-xl border border-white/10 font-semibold text-white hover:bg-white/10 transition-colors">
               Get Started
             </button>
-            <p className="text-[10px] text-slate-600 mt-3 text-center w-full group-hover:text-slate-500 transition-colors">Perfect for hobbyists</p>
+            <p className="text-[10px] text-slate-600 mt-3 text-center w-full">Perfect for students & beginners</p>
           </div>
 
           {/* Pro Tier (Glowing) */}
           <div className="relative p-8 rounded-3xl bg-[#0f0e1a] border border-violet-500/50 flex flex-col items-start text-left shadow-[0_0_50px_-15px_rgba(139,92,246,0.3)] transform md:-translate-y-4 hover:shadow-[0_0_80px_-10px_rgba(139,92,246,0.4)] transition-all">
             <div className="absolute top-0 right-0 p-4">
-              <span className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg">Popular</span>
+              <span className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg">Best Seller</span>
             </div>
-            <h3 className="text-lg font-medium text-white">Pro</h3>
+            <h3 className="text-lg font-medium text-white">Professional</h3>
             <div className="mt-4 mb-6">
-              <span className="text-4xl font-bold text-white">$29</span>
+              <span className="text-4xl font-bold text-white">$15</span>
               <span className="text-violet-300">/mo</span>
             </div>
             <ul className="space-y-4 mb-8 flex-1 w-full text-violet-100/90 text-sm">
               <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-violet-400" /> <span className="font-semibold">Unlimited</span> Generations</li>
-              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-violet-400" /> <span className="font-semibold">Automation Scripts</span> & BDD</li>
-              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-violet-400" /> Permanent History Archive</li>
-              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-violet-400" /> Export to Code</li>
+              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-violet-400" /> Cypress & Playwright</li>
+              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-violet-400" /> <span className="font-semibold">Data Factory</span> & Refiner</li>
+              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-violet-400" /> Code-to-Test Generator</li>
+              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-violet-400" /> Jira Integration</li>
             </ul>
             <button onClick={onGetStarted} className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-bold hover:opacity-90 transition-opacity shadow-lg shadow-violet-500/25">
               Start Free Trial
             </button>
           </div>
 
-          {/* Enterprise Tier */}
+          {/* Agency Tier */}
           <div className="p-8 rounded-3xl bg-[#0b0a14] border border-white/5 flex flex-col items-start text-left hover:bg-white/5 transition-colors">
-            <h3 className="text-lg font-medium text-white">Enterprise</h3>
+            <h3 className="text-lg font-medium text-white">Agency / Team</h3>
             <div className="mt-4 mb-6">
-              <span className="text-4xl font-bold text-white">$99</span>
+              <span className="text-4xl font-bold text-white">$49</span>
               <span className="text-slate-500">/mo</span>
             </div>
             <ul className="space-y-4 mb-8 flex-1 w-full text-slate-400 text-sm">
-              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-white" /> SSO & Admin Controls</li>
-              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-white" /> Advanced Security & Privacy</li>
-              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-white" /> Custom Jira Integrations</li>
+              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-white" /> 5 Team Members</li>
+              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-white" /> <span className="font-bold text-orange-400">Swagger to Postman</span></li>
+              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-white" /> Shared Workspace</li>
+              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-white" /> Priority 24h Support</li>
+              <li className="flex items-center gap-3"><CheckCircle2 className="w-4 h-4 text-white" /> Privacy Mode (No AI Training)</li>
             </ul>
             <button onClick={onContactSales} className="w-full py-3 px-4 rounded-xl border border-white/10 font-semibold text-white hover:bg-white/10 transition-colors">
               Contact Sales

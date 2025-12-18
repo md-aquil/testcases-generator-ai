@@ -11,7 +11,11 @@ import {
   Bot, 
   Zap, 
   Moon, 
-  Sun 
+  Sun,
+  Database,
+  FileCode,
+  Server,
+  FolderKanban
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -39,8 +43,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
   toggleTheme,
   onUpgrade
 }) => {
-  const navItems = [
+  const mainNav = [
     { id: 'APP', label: 'Generator', icon: LayoutDashboard },
+    { id: 'DATA_FACTORY', label: 'Data Factory', icon: Database },
+    { id: 'UNIT_TEST', label: 'Code-to-Test', icon: FileCode },
+    { id: 'API_TEST', label: 'API Tester', icon: Server },
+    { id: 'MANAGER', label: 'Test Manager', icon: FolderKanban },
+  ];
+
+  const bottomNav = [
     { id: 'HISTORY', label: 'History', icon: History },
     { id: 'TEAM', label: 'Team', icon: Users },
     { id: 'BILLING', label: 'Billing', icon: CreditCard },
@@ -51,7 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside className="w-64 bg-white dark:bg-[#08080a] border-r border-gray-200 dark:border-white/5 flex flex-col h-full transition-colors duration-300 flex-shrink-0 z-20">
       
       {/* Logo Area */}
-      <div className="p-6 flex items-center gap-3">
+      <div className="p-6 flex items-center gap-3 cursor-pointer" onClick={() => onNavigate('LANDING')}>
         <div className="bg-gradient-to-br from-violet-600 via-fuchsia-600 to-indigo-600 text-white p-2.5 rounded-xl shadow-lg shadow-violet-500/20">
           <Bot className="w-5 h-5" />
         </div>
@@ -62,33 +73,58 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 space-y-2 overflow-y-auto py-4">
-        {navItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => onNavigate(item.id as Page)}
-            className={`
-              relative group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
-              ${currentPage === item.id 
-                ? 'text-white' 
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}
-            `}
-          >
-            {/* Active Background Pill */}
-            {currentPage === item.id && (
-               <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-xl shadow-lg shadow-violet-500/30 animate-in fade-in zoom-in duration-200"></div>
-            )}
-            
-            <item.icon className={`w-4 h-4 relative z-10 ${currentPage === item.id ? 'text-white' : 'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'}`} />
-            <span className="relative z-10">{item.label}</span>
-            
-            {/* Hover Glow for non-active items */}
-            {currentPage !== item.id && (
-                <div className="absolute inset-0 rounded-xl bg-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            )}
-          </button>
-        ))}
-      </nav>
+      <div className="flex-1 overflow-y-auto py-4 px-4 space-y-6">
+        
+        {/* Main Tools */}
+        <div className="space-y-1">
+          <p className="px-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Core Tools</p>
+          {mainNav.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => onNavigate(item.id as Page)}
+              className={`
+                relative group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                ${currentPage === item.id 
+                  ? 'text-white' 
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}
+              `}
+            >
+              {currentPage === item.id && (
+                 <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-xl shadow-lg shadow-violet-500/30 animate-in fade-in zoom-in duration-200"></div>
+              )}
+              
+              <item.icon className={`w-4 h-4 relative z-10 ${currentPage === item.id ? 'text-white' : 'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'}`} />
+              <span className="relative z-10">{item.label}</span>
+              
+              {item.id === 'MANAGER' && <span className="ml-auto text-[9px] bg-white/10 px-1.5 py-0.5 rounded text-white relative z-10">SOON</span>}
+            </button>
+          ))}
+        </div>
+
+        {/* Management */}
+        <div className="space-y-1">
+          <p className="px-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Management</p>
+          {bottomNav.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => onNavigate(item.id as Page)}
+              className={`
+                relative group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
+                ${currentPage === item.id 
+                  ? 'text-white' 
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}
+              `}
+            >
+              {currentPage === item.id && (
+                 <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-xl shadow-lg shadow-violet-500/30 animate-in fade-in zoom-in duration-200"></div>
+              )}
+              <item.icon className={`w-4 h-4 relative z-10 ${currentPage === item.id ? 'text-white' : 'text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300'}`} />
+              <span className="relative z-10">{item.label}</span>
+            </button>
+          ))}
+        </div>
+
+      </div>
 
       {/* Bottom Section */}
       <div className="p-4 border-t border-gray-200 dark:border-white/5 space-y-4 bg-gray-50/50 dark:bg-black/20">
@@ -97,11 +133,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="bg-white dark:bg-[#131316] rounded-xl p-4 border border-gray-100 dark:border-white/5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-              {userPlan === 'STARTER' ? 'Credits' : 'Pro'}
+              {userPlan === 'STARTER' ? 'Credits' : userPlan}
             </span>
             {userPlan === 'STARTER' && (
               <span className="text-xs text-gray-500">
-                {usageData.count}/{dailyLimit}
+                {usageData.storiesCount}/{dailyLimit}
               </span>
             )}
             {userPlan !== 'STARTER' && (
@@ -114,7 +150,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="h-1.5 w-full bg-gray-200 dark:bg-black/40 rounded-full overflow-hidden mb-3">
                 <div 
                   className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(217,70,239,0.5)]"
-                  style={{ width: `${Math.min((usageData.count / dailyLimit) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((usageData.storiesCount / dailyLimit) * 100, 100)}%` }}
                 ></div>
               </div>
               <button 

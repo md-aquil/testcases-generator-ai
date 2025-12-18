@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { TeamMember, TeamActivity, UserPlan } from '../types';
 import { getTeamMembers, getTeamActivity } from '../services/firebaseService';
@@ -14,15 +13,15 @@ export const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({ userPlan, onContac
   const [activities, setActivities] = useState<TeamActivity[]>([]);
 
   useEffect(() => {
-    // Only fetch if enterprise
-    if (userPlan === 'ENTERPRISE') {
+    // Only fetch if agency
+    if (userPlan === 'AGENCY') {
       getTeamMembers().then(setMembers);
       getTeamActivity().then(setActivities);
     }
   }, [userPlan]);
 
-  // Access Control: Block non-Enterprise users
-  if (userPlan !== 'ENTERPRISE') {
+  // Access Control: Block non-Agency users
+  if (userPlan !== 'AGENCY') {
     return (
       <div className="flex flex-col items-center justify-center py-20 px-4 text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="relative">
@@ -37,10 +36,10 @@ export const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({ userPlan, onContac
         
         <div className="max-w-md space-y-3">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Enterprise Team Workspace
+            Agency Team Workspace
           </h2>
           <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
-            Collaborate with your entire QA team, share test assets, and manage permissions. This feature is exclusive to our Enterprise plan.
+            Collaborate with your entire QA team, share test assets, and manage permissions. This feature is exclusive to our Agency plan.
           </p>
         </div>
 
