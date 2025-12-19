@@ -19,9 +19,13 @@ router.post("/generate", async (req, res) => {
     switch (type) {
       case "testcases":
         const story = payload.userStory || payload;
-        // Always force true for now as per your requirement
-        const auto = true; 
-        result = await generateContentFromStory(story, auto);
+        // Check for refinement context passed from frontend
+        const refinementContext = payload.refinementContext || null; 
+        
+        // Always force automation true for now (unless explicitly false in payload)
+        const auto = payload.includeAutomation !== undefined ? payload.includeAutomation : true; 
+
+        result = await generateContentFromStory(story, auto, refinementContext);
         break;
       
       case "analyze":

@@ -1,4 +1,6 @@
-// FIX: Port 4000 ensure karein
+import { GeneratedResponse, ChatMessage, TestCase, AnalysisResult } from "../types";
+
+// Ensure this matches your Backend Port
 const BACKEND_URL = 'http://localhost:4000'; 
 
 async function post(payload: any) {
@@ -20,52 +22,63 @@ async function post(payload: any) {
   }
 }
 
-export const generateContentFromStory = async (userStory: string, includeAutomation: boolean) => {
-  return post({
-    type: "testcases",
-    payload: { 
-        userStory, 
-        // 🔥 FORCE TRUE HERE TOO
-        includeAutomation: true 
-    }
-  });
-};
-
-export const analyzeRequirements = async (userStory: string) => {
+export const analyzeRequirements = async (userStory: string): Promise<AnalysisResult> => {
   return post({
     type: "analyze",
     payload: { userStory }
   });
 };
 
-export const generateSyntheticData = async (prompt: string) => {
+export const generateContentFromStory = async (
+  userStory: string, 
+  includeAutomation: boolean = true, 
+  refinementContext?: AnalysisResult
+): Promise<GeneratedResponse> => {
+  return post({
+    type: "testcases",
+    payload: { 
+      userStory, 
+      includeAutomation,
+      refinementContext // Passing refinement data to backend
+    }
+  });
+};
+
+export const generateSyntheticData = async (prompt: string): Promise<string> => {
   return post({
     type: "synthetic_data",
     payload: { prompt }
   });
 };
 
-export const generateUnitTests = async (code: string, framework: string) => {
+export const generateUnitTests = async (code: string, framework: 'Jest' | 'Mocha' = 'Jest'): Promise<string> => {
   return post({
     type: "unit_tests",
     payload: { code, framework }
   });
 };
 
-export const generateApiTests = async (input: string) => {
+export const generateApiTests = async (input: string): Promise<string> => {
   return post({
     type: "api_tests",
     payload: { input }
   });
 };
 
-export const sendChatMessage = async (payload: { input: string; userPlan: string; contextStory?: string }) => {
+export const sendChatMessage = async (
+  currentHistory: ChatMessage[], 
+  newMessage: string, 
+  contextStory: string,
+  testCases: TestCase[],
+  userPlan: string
+): Promise<string> => {
   return post({
     type: "chat",
     payload: {
-      message: payload.input,
-      userPlan: payload.userPlan,
-      contextStory: payload.contextStory
+      message: newMessage,
+      userPlan: userPlan,
+      contextStory: contextStory,
+      testCases: testCases
     }
   });
 };

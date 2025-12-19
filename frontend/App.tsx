@@ -57,7 +57,8 @@ import {
   Zap,
   FileCode,
   Share2,
-  Menu
+  Menu,
+  FileSearch
 } from 'lucide-react';
 
 const SAMPLE_STORY = `As a registered user, I want to be able to reset my password using a "Forgot Password" link on the login screen so that I can regain access to my account if I forget my credentials. The system should send a recovery email with a time-limited link.`;
@@ -259,6 +260,31 @@ export default function App() {
     setAppState(AppState.SUCCESS);
   };
 
+  // Analysis Logic (Manual Button)
+  const handleAnalyzeClick = async () => {
+    if (!userStory.trim()) return;
+    if (!isLoggedIn) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    if (userPlan === 'STARTER') {
+      setUpgradeReason('FEATURE_LOCKED');
+      setShowUpgradeModal(true);
+      return;
+    }
+
+    setAppState(AppState.ANALYZING);
+    try {
+      const analysis = await analyzeRequirements(userStory);
+      setAnalysisResult(analysis);
+      setAppState(AppState.IDLE); // Return to idle state but with modal open
+    } catch (err) {
+      setError("Analysis failed. Please try again.");
+      setAppState(AppState.ERROR);
+    }
+  };
+
   // Generation Logic
   const handleGenerateClick = async () => {
     if (!userStory.trim()) return;
@@ -273,30 +299,18 @@ export default function App() {
       return;
     }
 
-    setAppState(AppState.ANALYZING);
-    
-    // Pro/Agency users get refinement
-    if (userPlan !== 'STARTER') {
-      const analysis = await analyzeRequirements(userStory);
-      if (analysis.isAmbiguous || analysis.missingDetails.length > 0) {
-        setAnalysisResult(analysis);
-        // We pause here waiting for user confirmation in RequirementRefiner component
-        return;
-      }
-    }
-
-    // Proceed if starter or clean analysis
     await executeGeneration();
   };
 
-  const executeGeneration = async () => {
+  const executeGeneration = async (refined: boolean = false) => {
     setAppState(AppState.LOADING);
     setError(null);
-    setAnalysisResult(null); // Clear modal if open
+    const refinementData = refined ? analysisResult : undefined;
+    setAnalysisResult(null); // Close modal
 
     try {
       const includeAutomation = userPlan === 'PRO' || userPlan === 'AGENCY';
-      const result = await generateContentFromStory(userStory, includeAutomation);
+      const result = await generateContentFromStory(userStory, includeAutomation, refinementData as any);
       
       if (result.testCases.length > 0 && result.testCases[0].id === 'INVALID_INPUT') {
         setError("Invalid User Story detected. Please enter a valid functional requirement.");
@@ -425,12 +439,27 @@ export default function App() {
                   <button onClick={() => fileInputRef.current?.click()} className="bg-white dark:bg-[#1a1a1e] text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 p-2 rounded-lg shadow-lg border border-gray-200 dark:border-white/10 transition-all hover:scale-105 backdrop-blur-sm" title="Upload Text File"><Upload className="w-4 h-4" /></button>
                 </div>
               </div>
-              <div className="flex items-center justify-end pt-2">
-                <button onClick={handleGenerateClick} disabled={!userStory.trim() || appState === AppState.LOADING || appState === AppState.ANALYZING} className={`relative overflow-hidden group w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold tracking-wide shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 ${!userStory.trim() || appState === AppState.LOADING || appState === AppState.ANALYZING ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed' : 'bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-violet-500/25'}`}>
-                  {appState === AppState.LOADING || appState === AppState.ANALYZING ? (
+              <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
+                
+                {/* Analyze Button */}
+                <button 
+                  onClick={handleAnalyzeClick} 
+                  disabled={!userStory.trim() || appState === AppState.LOADING || appState === AppState.ANALYZING} 
+                  className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold border transition-all ${!userStory.trim() || appState === AppState.LOADING || appState === AppState.ANALYZING ? 'opacity-50 cursor-not-allowed border-gray-200 dark:border-white/5' : 'bg-white dark:bg-white/5 border-violet-200 dark:border-violet-500/30 text-violet-600 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-500/10'}`}
+                >
+                  {appState === AppState.ANALYZING ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileSearch className="w-4 h-4" />}
+                  Analyze Requirement
+                </button>
+
+                {/* Generate Button */}
+                <button 
+                  onClick={handleGenerateClick} 
+                  disabled={!userStory.trim() || appState === AppState.LOADING || appState === AppState.ANALYZING} 
+                  className={`relative overflow-hidden group w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold tracking-wide shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 ${!userStory.trim() || appState === AppState.LOADING || appState === AppState.ANALYZING ? 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed' : 'bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-violet-500/25'}`}>
+                  {appState === AppState.LOADING ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      <span className="relative z-10">{appState === AppState.ANALYZING ? 'Analyzing Requirements...' : 'Generating...'}</span>
+                      <span className="relative z-10">Generating Assets...</span>
                     </>
                   ) : (
                     <>
@@ -544,7 +573,8 @@ export default function App() {
       {analysisResult && (
         <RequirementRefiner 
           analysis={analysisResult} 
-          onProceed={executeGeneration}
+          onProceed={() => executeGeneration(false)}
+          onProceedWithRefinement={() => executeGeneration(true)}
           onCancel={() => setAnalysisResult(null)}
         />
       )}

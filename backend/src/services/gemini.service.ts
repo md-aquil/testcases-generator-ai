@@ -1,24 +1,41 @@
 import { Type } from "@google/genai";
-import { executeModelRequestWithFallback, executeChatMessage } from "./gemini.core";
+import { executeModelRequestWithFallback, executeChatMessage } from "../services/gemini.core"
 
 /**
- * FRONTEND SERVICE LAYER
- * Strategy: Divide & Conquer (5 Parallel Requests) to ensure FULL content.
+ * BACKEND SERVICE LAYER
+ * Handles Logic, Prompt Engineering, and External API Calls.
  */
 
 // --- PROMPTS ---
 
-const PROMPT_MANUAL = (story: string) => `
-User Story: "${story}"
+// Updated to handle Refinement Context
+const PROMPT_MANUAL = (story: string, refinementContext?: any) => {
+  let instruction = `User Story: "${story}"`;
 
-TASK:
-1. Generate 8-10 comprehensive Manual Test Cases (Positive, Negative, Edge).
-2. Generate matching BDD Gherkin Scenarios for each.
+  if (refinementContext && refinementContext.suggestions && refinementContext.suggestions.length > 0) {
+    instruction += `
+    
+    CRITICAL CONTEXT - AI REFINEMENT SUGGESTIONS:
+    The user wants to refine the story based on these suggestions:
+    ${JSON.stringify(refinementContext.suggestions)}
 
-OUTPUT: JSON with 'testCases' and 'gherkinScenarios'.
-`;
+    TASK UPDATE:
+    1. First, implicitly apply these suggestions to understand the "Better" version of the story.
+    2. Then, Generate 8-10 comprehensive Manual Test Cases based on the REFINED logic.
+    `;
+  }
 
-// 🔥 NEW: Specialized Prompt for Single Script
+  instruction += `
+  TASK:
+  1. Generate 8-10 comprehensive Manual Test Cases (Positive, Negative, Edge).
+  2. Generate matching BDD Gherkin Scenarios for each.
+
+  OUTPUT: JSON with 'testCases' and 'gherkinScenarios'.
+  `;
+  return instruction;
+};
+
+// Specialized Prompt for Single Script
 const PROMPT_SINGLE_SCRIPT = (story: string, framework: string, lang: string) => `
 User Story: "${story}"
 
@@ -114,7 +131,7 @@ async function generateSingleScript(story: string, framework: string, lang: stri
 export const analyzeRequirements = async (userStory: string) => {
   try {
     const text = await executeModelRequestWithFallback(
-      `Analyze user story: "${userStory}"`,
+      `Analyze user story for clarity and completeness: "${userStory}"`,
       {
         responseMimeType: "application/json",
         responseSchema: {
@@ -135,11 +152,11 @@ export const analyzeRequirements = async (userStory: string) => {
   }
 };
 
-export const generateContentFromStory = async (userStory: string, includeAutomation: boolean = true) => {
+export const generateContentFromStory = async (userStory: string, includeAutomation: boolean = true, refinementContext?: any) => {
   try {
-    // 🚀 STEP 1: Launch Manual Test Generation
+    // 🚀 STEP 1: Launch Manual Test Generation (With Refinement Context if present)
     const manualTask = executeModelRequestWithFallback(
-      PROMPT_MANUAL(userStory),
+      PROMPT_MANUAL(userStory, refinementContext),
       {
         responseMimeType: "application/json",
         responseSchema: SCHEMA_MANUAL
@@ -148,7 +165,7 @@ export const generateContentFromStory = async (userStory: string, includeAutomat
 
     let automationScripts: any[] = [];
 
-    // 🚀 STEP 2: Launch 4 Parallel Script Generators (If requested)
+    // 🚀 STEP 2: Launch Parallel Script Generators (If requested)
     if (includeAutomation) {
       const scriptTasks = [
         generateSingleScript(userStory, "Playwright", "TypeScript"),
